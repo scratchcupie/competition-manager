@@ -530,79 +530,8 @@
 <script>
   const SUPABASE_URL = 'https://uxlndfyxiftepvtdbryn.supabase.co';
   const SUPABASE_KEY = 'sb_publishable_X1XRELXJV0WJXoaXY6mlkw_iUKhO9WW';
-  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-  // ── SAVE competition to Supabase ──
-  async function saveCompetition() {
-    const comp = state.comp;
-    const payload = {
-      name: comp.name,
-      course: comp.course,
-      date: comp.date || null,
-      format: comp.format,
-      par: comp.par,
-      course_rating: comp.courseRating,
-      slope_rating: comp.slopeRating,
-      hcp_allowance: comp.hcpAllowance,
-      pars: state.pars,
-      si: state.si
-    };
-
-    let compId = state.savedCompId;
-
-    if (compId) {
-      // Update existing
-      const { error } = await db.from('competitions').update(payload).eq('id', compId);
-      if (error) { console.error('Save error:', error); return null; }
-    } else {
-      // Insert new
-      const { data, error } = await db.from('competitions').insert(payload).select().single();
-      if (error) { console.error('Save error:', error); return null; }
-      compId = data.id;
-      state.savedCompId = compId;
-    }
-
-    // Save players
-    for (const p of state.players) {
-      if (p.dbId) continue; // already saved
-      const { data, error } = await db.from('players').insert({
-        competition_id: compId,
-        name: p.name,
-        hcp_index: p.hcpIndex,
-        email: p.email || null,
-        phone: p.phone || null,
-        club: p.club || null,
-        gui_number: p.gui || null
-      }).select().single();
-      if (!error) p.dbId = data.id;
-    }
-
-    // Save scores
-    for (const p of state.players) {
-      if (!p.dbId || !state.scores[p.id]) continue;
-      await db.from('scores').upsert({
-        player_id: p.dbId,
-        competition_id: compId,
-        scores: state.scores[p.id],
-        updated_at: new Date().toISOString()
-      }, { onConflict: 'player_id,competition_id' });
-    }
-
-    return compId;
-  }
-
-  // Auto-save scores after each hole entry
-  async function autoSaveScores() {
-    if (!state.savedCompId) return; // only if competition already saved
-    const p = state.players.find(x => x.id === state.activePlayer);
-    if (!p?.dbId || !state.scores[p.id]) return;
-    await db.from('scores').upsert({
-      player_id: p.dbId,
-      competition_id: state.savedCompId,
-      scores: state.scores[p.id],
-      updated_at: new Date().toISOString()
-    }, { onConflict: 'player_id,competition_id' });
-  }
+  let db = null;
+  try { db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { console.warn('Supabase offline:', e.message); }
 </script>
 </head>
 <body>
@@ -980,13 +909,71 @@ const state = {
 };
 
 // ═══════════════════════════════════════════
+//  SUPABASE FUNCTIONS
+// ═══════════════════════════════════════════
+async function saveCompetition() {
+  if (!db) { console.warn('No DB connection'); return null; }
+  const comp = state.comp;
+  const payload = {
+    name: comp.name, course: comp.course, date: comp.date || null,
+    format: comp.format, par: comp.par, course_rating: comp.courseRating,
+    slope_rating: comp.slopeRating, hcp_allowance: comp.hcpAllowance,
+    pars: state.pars, si: state.si
+  };
+  let compId = state.savedCompId;
+  if (compId) {
+    const { error } = await db.from('competitions').update(payload).eq('id', compId);
+    if (error) { console.error('Save error:', error); return null; }
+  } else {
+    const { data, error } = await db.from('competitions').insert(payload).select().single();
+    if (error) { console.error('Save error:', error); return null; }
+    compId = data.id;
+    state.savedCompId = compId;
+  }
+  for (const p of state.players) {
+    if (p.dbId) continue;
+    const { data, error } = await db.from('players').insert({
+      competition_id: compId, name: p.name, hcp_index: p.hcpIndex,
+      email: p.email || null, phone: p.phone || null, club: p.club || null, gui_number: p.gui || null
+    }).select().single();
+    if (!error) p.dbId = data.id;
+  }
+  for (const p of state.players) {
+    if (!p.dbId || !state.scores[p.id]) continue;
+    await db.from('scores').upsert({
+      player_id: p.dbId, competition_id: compId,
+      scores: state.scores[p.id], updated_at: new Date().toISOString()
+    }, { onConflict: 'player_id,competition_id' });
+  }
+  return compId;
+}
+
+async function autoSaveScores() {
+  if (!db || !state.savedCompId) return;
+  const p = state.players.find(x => x.id === state.activePlayer);
+  if (!p?.dbId || !state.scores[p.id]) return;
+  await db.from('scores').upsert({
+    player_id: p.dbId, competition_id: state.savedCompId,
+    scores: state.scores[p.id], updated_at: new Date().toISOString()
+  }, { onConflict: 'player_id,competition_id' });
+}
+
+// ═══════════════════════════════════════════
 //  INIT
 // ═══════════════════════════════════════════
-document.addEventListener('DOMContentLoaded', () => {
+function initApp() {
   // Set today's date
-  document.getElementById('compDate').value = new Date().toISOString().split('T')[0];
+  const dateEl = document.getElementById('compDate');
+  if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
   buildParInputs();
-});
+}
+
+// Run immediately if DOM is ready, otherwise wait
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initApp);
+} else {
+  initApp();
+}
 
 function buildParInputs() {
   const frontParent = document.getElementById('setup-front');
