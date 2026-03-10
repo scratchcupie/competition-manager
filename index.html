@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scratch Cups Ireland — Competition Manager</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green-dark: #175911;
+    --green-mid: #1C6B14;
+    --green-light: #EAF2EB;
+    --gold: #C8952A;
+    --gold-light: #F5E6C8;
+    --ink: #1C2B22;
+    --stone: #DDD9D0;
+    --mist: #F7F5F1;
+    --grey: #4A5568;
+    --white: #ffffff;
+    --red: #c0392b;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--mist);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: var(--ink);
+    color: var(--stone);
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-align: center;
+    padding: 7px;
+    text-transform: uppercase;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--white);
+    border-bottom: 1px solid var(--stone);
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo-icon {
+    width: 42px;
+    height: 42px;
+    background: var(--green-dark);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+  }
+  .logo-text h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--green-dark);
+    line-height: 1.1;
+  }
+  .logo-text span {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--grey);
+  }
+  .header-badge {
+    background: var(--gold-light);
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 5px 12px;
+    border-radius: 2px;
+    border: 1px solid var(--gold);
+  }
+
+  /* ── NAV TABS ── */
+  .nav-tabs {
+    background: var(--white);
+    border-bottom: 2px solid var(--stone);
+    display: flex;
+    gap: 0;
+    padding: 0 24px;
+    overflow-x: auto;
+  }
+  .nav-tab {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    white-space: nowrap;
+    color: var(--grey);
+    transition: all 0.2s;
+    background: none;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+  }
+  .nav-tab:hover { color: var(--green-dark); }
+  .nav-tab.active {
+    color: var(--green-dark);
+    border-bottom-color: var(--green-dark);
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main { padding: 28px 24px; max-width: 960px; margin: 0 auto; }
+
+  /* ── SECTION TITLE ── */
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .section-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-bottom: 24px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--stone);
+    border-radius: 4px;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+  .card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--stone);
+  }
+
+  /* ── FORM ELEMENTS ── */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+    font-weight: 500;
+  }
+  .form-group input, .form-group select {
+    border: 1px solid var(--stone);
+    border-radius: 2px;
+    padding: 9px 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--white);
+    transition: border-color 0.15s;
+    outline: none;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--green-dark);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 20px;
+    border-radius: 2px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+  }
+  .btn-primary { background: var(--green-dark); color: white; }
+  .btn-primary:hover { background: #0f3d0b; }
+  .btn-secondary { background: var(--white); color: var(--ink); border: 1px solid var(--stone); }
+  .btn-secondary:hover { border-color: var(--green-dark); color: var(--green-dark); }
+  .btn-gold { background: var(--gold); color: white; }
+  .btn-gold:hover { background: #a87820; }
+  .btn-danger { background: var(--red); color: white; }
+  .btn-sm { padding: 6px 12px; font-size: 9px; }
+
+  /* ── PLAYER TABLE ── */
+  .player-table { width: 100%; border-collapse: collapse; }
+  .player-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    padding: 8px 12px;
+    text-align: left;
+    border-bottom: 1px solid var(--stone);
+    background: var(--mist);
+  }
+  .player-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f0ede8;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .player-table tr:last-child td { border-bottom: none; }
+  .player-table tr:hover td { background: #fafaf8; }
+  .player-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--grey);
+    background: var(--mist);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── LEADERBOARD ── */
+  .leaderboard-table { width: 100%; border-collapse: collapse; }
+  .leaderboard-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--grey);
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--stone);
+    background: var(--mist);
+  }
+  .leaderboard-table td {
+    padding: 12px 14px;
+    border-bottom: 1px solid #f0ede8;
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  .leaderboard-table tr:hover td { background: #fafaf8; }
+  .pos-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    font-weight: 500;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pos-1 { background: var(--gold); color: white; }
+  .pos-2 { background: #a0a9b8; color: white; }
+  .pos-3 { background: #b07850; color: white; }
+  .pos-other { background: var(--mist); color: var(--grey); }
+
+  .pts-big {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--green-dark);
+  }
+  .pts-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--grey);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .score-chip {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 2px;
+    display: inline-block;
+  }
+  .score-green { background: var(--green-light); color: var(--green-dark); }
+  .score-gold { background: var(--gold-light); color: var(--gold); }
+  .score-grey { background: var(--mist); color: var(--grey); }
+  .status-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    margin-right: 6px;
+  }
+  .dot-live { background: #22c55e; animation: pulse 1.5s infinite; }
+  .dot-pending { background: var(--stone); }
+  .dot-done { background: var(--green-dark); }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── SCORE ENTRY ── */
+  .scorecard-grid {
+    display: grid;
+    grid-template-columns: repeat(9, 1fr);
+    gap: 4px;
+    margin-bottom: 8px;
+  }
+  .hole-cell {
+    text-align: center;
+  }
+  .hole-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--grey);
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+    background: var(--mist);
+    padding: 3px;
+    border-radius: 2px;
+  }
+  .hole-par {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+  .hole-input {
+    width: 100%;
+    border: 1px solid var(--stone);
+    border-radius: 2px;
+    padding: 6px 2px;
+    text-align: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--ink);
+    outline: none;
+    transition: all 0.15s;
+  }
+  .hole-input:focus { border-color: var(--green-dark); background: var(--green-light); }
+  .hole-pts {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    margin-top: 3px;
+    height: 16px;
+  }
+  .pts-pos { color: var(--green-dark); }
+  .pts-neg { color: var(--red); }
+  .pts-par { color: var(--grey); }
+
+  .scorecard-divider {
+    grid-column: 1 / -1;
+    border-top: 2px dashed var(--stone);
+    margin: 4px 0;
+  }
+
+  .score-totals {
+    display: flex;
+    gap: 20px;
+    padding: 14px 16px;
+    background: var(--mist);
+    border-radius: 3px;
+    border: 1px solid var(--stone);
+    margin-top: 12px;
+  }
+  .total-item { text-align: center; }
+  .total-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--green-dark);
+    line-height: 1;
+  }
+  .total-lbl {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+    margin-top: 3px;
+  }
+  .total-divider { width: 1px; background: var(--stone); }
+
+  /* ── COMPETITION INFO BAR ── */
+  .comp-bar {
+    background: var(--green-dark);
+    color: white;
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .comp-bar-item {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .comp-bar-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.6);
+  }
+  .comp-bar-val {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .comp-bar-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
+
+  /* ── ALERTS ── */
+  .alert {
+    padding: 12px 16px;
+    border-radius: 3px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .alert-success { background: var(--green-light); color: var(--green-dark); border: 1px solid #b8ddb9; }
+  .alert-info { background: var(--gold-light); color: #7a5a1a; border: 1px solid #e8c87a; }
+
+  /* ── HANDICAP CONTROL ── */
+  .hcp-control {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--mist);
+    border: 1px solid var(--stone);
+    border-radius: 3px;
+    padding: 10px 14px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+  .hcp-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--grey);
+    flex: 1;
+  }
+  .hcp-slider { flex: 2; min-width: 120px; accent-color: var(--green-dark); }
+  .hcp-val {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--green-dark);
+    min-width: 36px;
+    text-align: center;
+  }
+
+  /* ── SHARE CARD ── */
+  .share-card {
+    background: var(--ink);
+    color: white;
+    border-radius: 4px;
+    padding: 24px;
+    text-align: center;
+  }
+  .share-card h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+  .share-card .share-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 20px;
+  }
+
+  /* ── UTILS ── */
+  .hidden { display: none !important; }
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .mb-3 { margin-bottom: 12px; }
+  .mb-4 { margin-bottom: 16px; }
+  .text-grey { color: var(--grey); font-size: 13px; }
+  .mono { font-family: 'DM Mono', monospace; }
+
+  @media (max-width: 640px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+    .scorecard-grid { grid-template-columns: repeat(6, 1fr); }
+    .main { padding: 16px; }
+    header { padding: 12px 16px; }
+    .nav-tabs { padding: 0 12px; }
+    .comp-bar { padding: 12px 16px; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">Scratch Cups Ireland — Competition Manager · Demo Mode</div>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">⛳</div>
+    <div class="logo-text">
+      <h1>Scratch Cups Ireland</h1>
+      <span>Competition Manager</span>
+    </div>
+  </div>
+  <div class="header-badge">Demo v1.0</div>
+</header>
+
+<!-- Competition Info Bar (hidden until comp is set up) -->
+<div class="comp-bar hidden" id="compBar">
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Competition</div>
+    <div class="comp-bar-val" id="barCompName">—</div>
+  </div>
+  <div class="comp-bar-sep"></div>
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Course</div>
+    <div class="comp-bar-val" id="barCourse">—</div>
+  </div>
+  <div class="comp-bar-sep"></div>
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Date</div>
+    <div class="comp-bar-val" id="barDate">—</div>
+  </div>
+  <div class="comp-bar-sep"></div>
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Format</div>
+    <div class="comp-bar-val" id="barFormat">Stableford</div>
+  </div>
+  <div class="comp-bar-sep"></div>
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Players</div>
+    <div class="comp-bar-val" id="barPlayers">0</div>
+  </div>
+  <div class="comp-bar-sep"></div>
+  <div class="comp-bar-item">
+    <div class="comp-bar-label">Hcp Allowance</div>
+    <div class="comp-bar-val" id="barHcp">100%</div>
+  </div>
+</div>
+
+<!-- Nav Tabs -->
+<div class="nav-tabs">
+  <button class="nav-tab active" onclick="showTab('setup')">① Setup</button>
+  <button class="nav-tab" onclick="showTab('players')">② Players</button>
+  <button class="nav-tab" onclick="showTab('scoring')">③ Score Entry</button>
+  <button class="nav-tab" onclick="showTab('leaderboard')">④ Leaderboard</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 1: SETUP
+════════════════════════════════════════ -->
+<div class="main" id="tab-setup">
+  <p class="section-title">Competition Setup</p>
+  <p class="section-sub">Configure your competition details</p>
+
+  <div class="card">
+    <div class="card-title">Competition Details</div>
+    <div class="form-grid mb-4">
+      <div class="form-group">
+        <label>Competition Name</label>
+        <input type="text" id="compName" placeholder="e.g. Friday Society Stableford" value="Friday Lads — Spring Stableford">
+      </div>
+      <div class="form-group">
+        <label>Golf Course</label>
+        <input type="text" id="courseName" placeholder="e.g. Portmarnock Golf Club" value="Portmarnock Golf Club">
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="compDate">
+      </div>
+      <div class="form-group">
+        <label>Format</label>
+        <select id="compFormat">
+          <option value="stableford">Stableford</option>
+          <option value="stroke">Stroke Play</option>
+          <option value="matchplay" disabled>Match Play (coming soon)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Course Setup — Par &amp; Stroke Index per Hole</div>
+    <p class="text-grey mb-3">Enter par and stroke index (SI) for each hole. SI 1 = hardest, SI 18 = easiest. Each SI must be unique (1–18).</p>
+
+    <!-- Course template tools -->
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;padding:12px 14px;background:var(--mist);border:1px solid var(--stone);border-radius:3px;">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--grey);flex:1;">Course Template</span>
+      <button class="btn btn-secondary btn-sm" onclick="downloadCourseTemplate()">⬇ Download Template</button>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('courseCSVInput').click()">📂 Load Course CSV</button>
+      <input type="file" id="courseCSVInput" accept=".csv,.txt" style="display:none;" onchange="importCourseCSV(this)">
+      <span id="courseCSVStatus" style="font-size:12px;color:var(--grey);">Fill in the template, save as CSV, then load it here</span>
+    </div>
+
+    <div class="alert alert-info" id="siWarning" style="display:none;">
+      ⚠️ Stroke index values must be unique (1–18). Please check for duplicates.
+    </div>
+
+    <div style="margin-bottom: 10px;">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Front Nine (Holes 1–9)</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:20px;" id="setup-front"></div>
+
+    <div style="margin-bottom: 10px;">
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Back Nine (Holes 10–18)</span>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;" id="setup-back"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Competition Settings</div>
+    <div class="alert alert-info">
+      ℹ️ Handicap allowance can be changed at any time — scores automatically recalculate.
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-wrap:wrap;">
+      <div class="form-group">
+        <label>Handicap Allowance</label>
+        <select id="hcpAllowance">
+          <option value="100">100% (Full Handicap)</option>
+          <option value="90">90%</option>
+          <option value="85">85%</option>
+          <option value="75">75%</option>
+          <option value="0">Scratch (0%)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Course Par</label>
+        <input type="number" id="coursePar" value="72" min="60" max="80">
+      </div>
+      <div class="form-group">
+        <label>Course Rating <span style="font-weight:300;color:var(--grey);">(CR)</span></label>
+        <input type="number" id="courseRating" value="72.0" min="55.0" max="80.0" step="0.1" placeholder="e.g. 71.4">
+      </div>
+      <div class="form-group">
+        <label>Slope Rating <span style="font-weight:300;color:var(--grey);">(SR)</span></label>
+        <input type="number" id="slopeRating" value="113" min="55" max="155" step="1" placeholder="e.g. 113">
+      </div>
+    </div>
+    <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);margin-top:10px;letter-spacing:0.05em;">
+      <strong>Course Rating (CR)</strong> — expected score for a scratch golfer under normal conditions. &nbsp;|&nbsp;
+      <strong>Slope Rating (SR)</strong> — measures course difficulty for a bogey golfer vs. scratch (standard = 113). Both are used in WHS playing handicap calculations.
+    </p>
+  </div>
+
+  <button class="btn btn-primary" onclick="saveSetup()">Save & Continue to Players →</button>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 2: PLAYERS
+════════════════════════════════════════ -->
+<div class="main hidden" id="tab-players">
+  <p class="section-title">Players</p>
+  <p class="section-sub">Add players manually, import from spreadsheet, or load demo data</p>
+
+  <div class="card">
+    <div class="card-title">Add Player Manually</div>
+    <div class="form-grid mb-3">
+      <div class="form-group">
+        <label>Player Name</label>
+        <input type="text" id="playerName" placeholder="Full name" onkeydown="if(event.key==='Enter')addPlayer()">
+      </div>
+      <div class="form-group">
+        <label>Handicap Index <span style="font-weight:300;color:var(--grey);">(use negative for plus, e.g. -2.1)</span></label>
+        <input type="number" id="playerHcp" placeholder="e.g. 12.4 or -2.1" step="0.1" min="-10" max="54" onkeydown="if(event.key==='Enter')addPlayer()">
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="addPlayer()">+ Add Player</button>
+    <button class="btn btn-secondary" style="margin-left:8px;" onclick="addSamplePlayers()">Load 8 Demo Players</button>
+  </div>
+
+  <!-- Spreadsheet Import -->
+  <div class="card">
+    <div class="card-title">Import from Spreadsheet</div>
+    <div class="alert alert-info" style="margin-bottom:14px;">
+      📋 Required column headers: <span style="font-family:'DM Mono',monospace;font-weight:600;">Name</span> and <span style="font-family:'DM Mono',monospace;font-weight:600;">HandicapIndex</span> — save as <strong>.csv</strong> before importing.
+      <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block;">Optional: <span style="font-family:'DM Mono',monospace;">Email · Phone · Club · GUI_Number</span> (for future online entry)</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
+      <button class="btn btn-secondary btn-sm" onclick="downloadTemplate()">⬇ Download CSV Template</button>
+      <span style="font-size:12px;color:var(--grey);">— fill in Excel/Numbers/Google Sheets, save as CSV, then import below</span>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+      <button class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()">📂 Choose CSV File</button>
+      <input type="file" id="csvFileInput" accept=".csv,.txt" style="display:none;" onchange="csvFileChosen(this)">
+      <span id="csvFileName" style="font-size:13px;color:var(--grey);">No file chosen</span>
+      <button class="btn btn-primary" id="csvLoadBtn" style="display:none;" onclick="loadChosenCSV()">⬆ Load Players</button>
+    </div>
+    <div id="csvImportResult" style="margin-top:12px;"></div>
+  </div>
+
+  <div class="card" id="playerListCard">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:10px;border-bottom:1px solid var(--stone);margin-bottom:0;">
+      <span class="card-title" style="border:none;padding:0;margin:0;">Player List</span>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <span id="playerCount" style="color:var(--grey);font-family:'DM Mono',monospace;font-size:11px;font-weight:300;">0 players</span>
+        <button class="btn btn-sm btn-danger" id="clearAllBtn" style="display:none;" onclick="clearAllPlayers()">✕ Remove All</button>
+      </div>
+    </div>
+    <table class="player-table" id="playerTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th>H. Index</th>
+          <th>Playing Hcp</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="playerTableBody">
+        <tr><td colspan="6" style="text-align:center;color:var(--grey);padding:20px;font-size:13px;">No players added yet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="flex gap-2">
+    <button class="btn btn-secondary" onclick="showTab('setup')">← Back</button>
+    <button class="btn btn-primary" onclick="goToScoring()">Continue to Score Entry →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 3: SCORE ENTRY
+════════════════════════════════════════ -->
+<div class="main hidden" id="tab-scoring">
+  <p class="section-title">Score Entry</p>
+  <p class="section-sub">Enter gross scores — points calculate automatically</p>
+
+  <!-- Dynamic handicap control -->
+  <div class="hcp-control">
+    <span class="hcp-label">⚙ Handicap Allowance (live)</span>
+    <input type="range" class="hcp-slider" id="hcpSlider" min="0" max="100" step="5" value="100" oninput="updateHcpAllowance(this.value)">
+    <span class="hcp-val" id="hcpSliderVal">100%</span>
+    <button class="btn btn-sm btn-secondary" onclick="recalcAllScores()">Recalculate All</button>
+  </div>
+
+  <!-- Player selector -->
+  <div class="card">
+    <div class="card-title">Select Player</div>
+    <div id="playerSelectorBtns" style="display:flex;flex-wrap:wrap;gap:8px;"></div>
+  </div>
+
+  <!-- Scorecard for selected player -->
+  <div id="scorecardSection" class="hidden">
+    <div class="card">
+      <div class="card-title flex justify-between items-center" style="display:flex;justify-content:space-between;">
+        <span id="scorecardPlayerName">Player Name</span>
+        <span id="scorecardHcpInfo" style="font-weight:300;color:var(--grey);"></span>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:12px;" id="scorecardFront"></div>
+      <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;" id="scorecardBack"></div>
+
+      <div class="score-totals" id="scoreTotals">
+        <div class="total-item">
+          <div class="total-val" id="totalGrossFront">—</div>
+          <div class="total-lbl">Gross (F9)</div>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-item">
+          <div class="total-val" id="totalGrossBack">—</div>
+          <div class="total-lbl">Gross (B9)</div>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-item">
+          <div class="total-val" id="totalGross">—</div>
+          <div class="total-lbl">Gross Total</div>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-item">
+          <div class="total-val" id="totalNett">—</div>
+          <div class="total-lbl">Nett Score</div>
+        </div>
+        <div class="total-divider"></div>
+        <div class="total-item">
+          <div class="total-val" id="totalPts" style="color:var(--gold)">—</div>
+          <div class="total-lbl">Stableford Pts</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary" onclick="saveScore()">Save Scorecard ✓</button>
+        <button class="btn btn-secondary" style="margin-left:8px;" onclick="clearScore()">Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex gap-2" style="margin-top:8px;">
+    <button class="btn btn-secondary" onclick="showTab('players')">← Back</button>
+    <button class="btn btn-gold" onclick="showTab('leaderboard')">View Leaderboard →</button>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     TAB 4: LEADERBOARD
+════════════════════════════════════════ -->
+<div class="main hidden" id="tab-leaderboard">
+  <div class="flex justify-between items-center mb-3" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+    <div>
+      <p class="section-title" id="lbTitle">Leaderboard</p>
+      <p class="section-sub" id="lbSub">Live standings</p>
+    </div>
+    <div class="flex gap-2" style="display:flex;gap:8px;">
+      <button class="btn btn-secondary btn-sm" onclick="showTab('scoring')">← Score Entry</button>
+      <button class="btn btn-gold btn-sm" onclick="shareLeaderboard()">Share ↗</button>
+    </div>
+  </div>
+
+  <!-- Handicap control on leaderboard too -->
+  <div class="hcp-control">
+    <span class="hcp-label">⚙ Handicap Allowance</span>
+    <input type="range" class="hcp-slider" id="hcpSliderLb" min="0" max="100" step="5" value="100" oninput="updateHcpAllowance(this.value)">
+    <span class="hcp-val" id="hcpSliderLbVal">100%</span>
+  </div>
+
+  <div class="card">
+    <div class="card-title flex justify-between" style="display:flex;justify-content:space-between;">
+      <span>Standings — Stableford</span>
+      <span id="lbTimestamp" style="font-weight:300;color:var(--grey);"></span>
+    </div>
+    <table class="leaderboard-table" id="leaderboardTable">
+      <thead>
+        <tr>
+          <th>Pos</th>
+          <th>Player</th>
+          <th>Hcp</th>
+          <th>Gross</th>
+          <th>Nett</th>
+          <th style="text-align:right;">Stableford Pts</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="leaderboardBody">
+        <tr><td colspan="7" style="text-align:center;color:var(--grey);padding:28px;font-size:13px;">No scores entered yet</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Share card -->
+  <div class="share-card" id="shareCard" style="display:none;">
+    <h3 id="shareTitle">Competition Results</h3>
+    <div class="share-sub" id="shareSubtitle">—</div>
+    <div id="shareResults" style="font-family:'DM Mono',monospace;font-size:13px;text-align:left;background:rgba(255,255,255,0.05);border-radius:3px;padding:16px;margin-bottom:16px;white-space:pre-line;line-height:1.8;"></div>
+    <button class="btn btn-gold" onclick="copyShareText()">📋 Copy for WhatsApp</button>
+    <button class="btn btn-secondary" style="margin-left:8px;background:transparent;color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.2);" onclick="document.getElementById('shareCard').style.display='none'">Close</button>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════
+const state = {
+  comp: { name: '', course: '', date: '', format: 'stableford', par: 72, courseRating: 72.0, slopeRating: 113, hcpAllowance: 100 },
+  pars: Array(18).fill(4),
+  si: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], // Stroke Index per hole (default sequential)
+  players: [],
+  scores: {}, // playerId -> array of 18 gross scores
+  activePlayer: null
+};
+
+// ═══════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date
+  document.getElementById('compDate').value = new Date().toISOString().split('T')[0];
+  buildParInputs();
+});
+
+function buildParInputs() {
+  const frontParent = document.getElementById('setup-front');
+  const backParent = document.getElementById('setup-back');
+  if (!frontParent || !backParent) return;
+  frontParent.innerHTML = '';
+  backParent.innerHTML = '';
+  for (let i = 0; i < 9; i++) frontParent.appendChild(makeSetupCell(i));
+  for (let i = 9; i < 18; i++) backParent.appendChild(makeSetupCell(i));
+}
+
+function makeSetupCell(holeIdx) {
+  const div = document.createElement('div');
+  div.className = 'hole-cell';
+  div.innerHTML = `
+    <div class="hole-num" style="background:var(--ink);color:white;">H${holeIdx+1}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--grey);text-align:center;margin:3px 0 2px;">PAR</div>
+    <input class="hole-input" type="number" id="par-${holeIdx}" value="${state.pars[holeIdx]}" min="3" max="6"
+      oninput="state.pars[${holeIdx}]=parseInt(this.value)||4;updateParSum()">
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);text-align:center;margin:5px 0 2px;">SI</div>
+    <input class="hole-input" type="number" id="si-${holeIdx}" value="${state.si[holeIdx]}" min="1" max="18"
+      style="border-color:var(--gold-light);"
+      oninput="state.si[${holeIdx}]=parseInt(this.value)||${holeIdx+1};validateSI()">
+  `;
+  return div;
+}
+
+function updateParSum() {
+  const total = state.pars.reduce((a,b) => a+b, 0);
+  const el = document.getElementById('coursePar');
+  if (el) el.value = total;
+  state.comp.par = total;
+}
+
+function validateSI() {
+  const vals = state.si.filter(v => v >= 1 && v <= 18);
+  const unique = new Set(vals);
+  const warning = document.getElementById('siWarning');
+  if (unique.size < 18 || vals.length < 18) {
+    if (warning) warning.style.display = 'flex';
+  } else {
+    if (warning) warning.style.display = 'none';
+  }
+}
+
+// ═══════════════════════════════════════════
+//  TABS
+// ═══════════════════════════════════════════
+function showTab(tab) {
+  ['setup','players','scoring','leaderboard'].forEach(t => {
+    document.getElementById(`tab-${t}`).classList.add('hidden');
+    document.querySelectorAll('.nav-tab').forEach((el, i) => {
+      const tabs = ['setup','players','scoring','leaderboard'];
+      el.classList.toggle('active', tabs[i] === tab);
+    });
+  });
+  document.getElementById(`tab-${tab}`).classList.remove('hidden');
+  if (tab === 'scoring') buildScoringTab();
+  if (tab === 'leaderboard') buildLeaderboard();
+}
+
+// ═══════════════════════════════════════════
+//  SETUP
+// ═══════════════════════════════════════════
+function saveSetup() {
+  state.comp.name = document.getElementById('compName').value || 'Competition';
+  state.comp.course = document.getElementById('courseName').value || 'Golf Course';
+  state.comp.date = document.getElementById('compDate').value;
+  state.comp.format = document.getElementById('compFormat').value;
+  state.comp.hcpAllowance = parseInt(document.getElementById('hcpAllowance').value);
+  state.comp.par = parseInt(document.getElementById('coursePar').value);
+  state.comp.courseRating = parseFloat(document.getElementById('courseRating').value) || 72.0;
+  state.comp.slopeRating = parseInt(document.getElementById('slopeRating').value) || 113;
+
+  // Read pars and SI
+  for (let i = 0; i < 18; i++) {
+    const parEl = document.getElementById(`par-${i}`);
+    const siEl = document.getElementById(`si-${i}`);
+    if (parEl) state.pars[i] = parseInt(parEl.value) || 4;
+    if (siEl) state.si[i] = parseInt(siEl.value) || (i + 1);
+  }
+
+  // Update bar
+  document.getElementById('barCompName').textContent = state.comp.name;
+  document.getElementById('barCourse').textContent = state.comp.course;
+  document.getElementById('barDate').textContent = state.comp.date ? new Date(state.comp.date).toLocaleDateString('en-IE', {day:'numeric',month:'short',year:'numeric'}) : '—';
+  document.getElementById('barHcp').textContent = state.comp.hcpAllowance + '%';
+  document.getElementById('compBar').classList.remove('hidden');
+  document.getElementById('hcpSlider').value = state.comp.hcpAllowance;
+  document.getElementById('hcpSliderLb').value = state.comp.hcpAllowance;
+  document.getElementById('hcpSliderVal').textContent = state.comp.hcpAllowance + '%';
+  document.getElementById('hcpSliderLbVal').textContent = state.comp.hcpAllowance + '%';
+
+  showTab('players');
+}
+
+// ═══════════════════════════════════════════
+//  PLAYERS
+// ═══════════════════════════════════════════
+function calcPlayingHcp(hcpIndex, allowance) {
+  // Plus handicaps are negative numbers (e.g. +2.1 stored as -2.1)
+  // Playing hcp = round(hcpIndex * allowance/100)
+  // For a +2.1 at 100%: round(-2.1 * 1.0) = -2 (they give 2 shots back)
+  return Math.round(hcpIndex * (allowance / 100));
+}
+
+function formatHcpIndex(hcpIndex) {
+  // Display: negative stored value means plus handicap — show as "+2.1"
+  if (hcpIndex < 0) return `+${Math.abs(hcpIndex).toFixed(1)}`;
+  return hcpIndex.toFixed(1);
+}
+
+function formatPlayingHcp(playHcp) {
+  // Playing hcp display: negative means plus (e.g. -2 → "+2")
+  if (playHcp < 0) return `+${Math.abs(playHcp)}`;
+  return `${playHcp}`;
+}
+
+function addPlayer() {
+  const name = document.getElementById('playerName').value.trim();
+  const hcp = parseFloat(document.getElementById('playerHcp').value);
+  if (!name) { alert('Please enter a player name'); return; }
+  if (isNaN(hcp) || hcp < -10 || hcp > 54) { alert('Please enter a valid handicap index (–10.0 to +54.0)'); return; }
+  if (state.players.length >= 8) { alert('Maximum 8 players for demo'); return; }
+  state.players.push({ id: Date.now(), name, hcpIndex: hcp });
+  document.getElementById('playerName').value = '';
+  document.getElementById('playerHcp').value = '';
+  document.getElementById('playerName').focus();
+  renderPlayerTable();
+}
+
+function addSamplePlayers() {
+  state.players = [];
+  const samples = [
+    { name: 'Seán Murphy', hcpIndex: 5.2 },
+    { name: 'Ciarán O\'Brien', hcpIndex: 11.8 },
+    { name: 'Pádraig Kelly', hcpIndex: 18.4 },
+    { name: 'Declan Walsh', hcpIndex: -2.1 },   // plus handicap
+    { name: 'Fiona McCarthy', hcpIndex: 14.1 },
+    { name: 'Brian Dunne', hcpIndex: 22.6 },
+    { name: 'Aoife Ryan', hcpIndex: -0.5 },      // plus handicap
+    { name: 'Tomás Burke', hcpIndex: 28.3 },
+  ];
+  samples.forEach((p, i) => state.players.push({ id: i + 1, ...p }));
+  renderPlayerTable();
+}
+
+function renderPlayerTable() {
+  const tbody = document.getElementById('playerTableBody');
+  document.getElementById('playerCount').textContent = state.players.length + ' player' + (state.players.length !== 1 ? 's' : '');
+  document.getElementById('barPlayers').textContent = state.players.length;
+  const clearBtn = document.getElementById('clearAllBtn');
+  if (clearBtn) clearBtn.style.display = state.players.length > 0 ? 'inline-flex' : 'none';
+
+  if (state.players.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:var(--grey);padding:20px;font-size:13px;">No players added yet</td></tr>';
+    return;
+  }
+  tbody.innerHTML = state.players.map((p, i) => {
+    const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance || 100);
+    const hasScore = state.scores[p.id] && state.scores[p.id].some(s => s > 0);
+    const isPlus = p.hcpIndex < 0;
+    return `
+    <tr>
+      <td><span class="player-num">${i+1}</span></td>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="mono" style="${isPlus ? 'color:var(--gold);font-weight:600;' : ''}">${formatHcpIndex(p.hcpIndex)}${isPlus ? ' <span style="font-size:9px;background:var(--gold-light);color:var(--gold);padding:1px 4px;border-radius:2px;font-family:DM Mono,monospace;letter-spacing:0.05em;">PLUS</span>' : ''}</span></td>
+      <td><span class="mono" style="color:var(--green-dark);font-weight:600;">${formatPlayingHcp(playHcp)}</span></td>
+      <td>
+        <span class="status-dot ${hasScore ? 'dot-done' : 'dot-pending'}"></span>
+        <span style="font-size:12px;color:var(--grey);">${hasScore ? 'Score entered' : 'Pending'}</span>
+      </td>
+      <td><button class="btn btn-sm btn-danger" onclick="removePlayer(${p.id})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+
+function removePlayer(id) {
+  state.players = state.players.filter(p => p.id !== id);
+  delete state.scores[id];
+  renderPlayerTable();
+}
+
+function goToScoring() {
+  if (state.players.length === 0) { alert('Please add at least one player'); return; }
+  showTab('scoring');
+}
+
+// ═══════════════════════════════════════════
+//  SCORING
+// ═══════════════════════════════════════════
+function buildScoringTab() {
+  const btns = document.getElementById('playerSelectorBtns');
+  btns.innerHTML = state.players.map(p => {
+    const hasScore = state.scores[p.id] && state.scores[p.id].some(s => s > 0);
+    return `<button class="btn ${hasScore ? 'btn-primary' : 'btn-secondary'}"
+      onclick="selectPlayer(${p.id})"
+      id="psel-${p.id}">
+      ${hasScore ? '✓ ' : ''}${p.name}
+    </button>`;
+  }).join('');
+  if (state.activePlayer) selectPlayer(state.activePlayer);
+}
+
+function selectPlayer(id) {
+  state.activePlayer = id;
+  const p = state.players.find(pl => pl.id === id);
+  if (!p) return;
+
+  document.getElementById('scorecardSection').classList.remove('hidden');
+  const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
+  document.getElementById('scorecardPlayerName').textContent = p.name;
+  document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} · Playing HCP: ${formatPlayingHcp(playHcp)}`;
+
+  if (!state.scores[id]) state.scores[id] = Array(18).fill(0);
+  renderScorecard(id);
+  updateTotals(id);
+}
+
+function renderScorecard(id) {
+  const frontDiv = document.getElementById('scorecardFront');
+  const backDiv = document.getElementById('scorecardBack');
+  frontDiv.innerHTML = '';
+  backDiv.innerHTML = '';
+
+  for (let i = 0; i < 9; i++) frontDiv.appendChild(makeScoreCell(id, i));
+  for (let i = 9; i < 18; i++) backDiv.appendChild(makeScoreCell(id, i));
+}
+
+function makeScoreCell(playerId, holeIdx) {
+  const div = document.createElement('div');
+  div.className = 'hole-cell';
+  const score = state.scores[playerId]?.[holeIdx] || 0;
+  const par = state.pars[holeIdx];
+  const si = state.si[holeIdx] || (holeIdx + 1);
+  const pts = calcHolePts(score, par, playerId, holeIdx);
+  const ptsDisplay = score > 0 ? pts : '—';
+  const ptsClass = score > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '';
+
+  div.innerHTML = `
+    <div class="hole-num">H${holeIdx+1}</div>
+    <div class="hole-par">Par ${par}</div>
+    <div style="font-family:'DM Mono',monospace;font-size:8px;color:var(--gold);text-align:center;margin-bottom:3px;">SI ${si}</div>
+    <input class="hole-input" type="number" id="score-${playerId}-${holeIdx}"
+      value="${score > 0 ? score : ''}" min="1" max="15" placeholder="${par}"
+      oninput="onScoreInput(${playerId},${holeIdx},this.value)">
+    <div class="hole-pts ${ptsClass}" id="pts-${playerId}-${holeIdx}">${ptsDisplay}</div>
+  `;
+  return div;
+}
+
+function onScoreInput(playerId, holeIdx, val) {
+  const v = parseInt(val);
+  if (!state.scores[playerId]) state.scores[playerId] = Array(18).fill(0);
+  state.scores[playerId][holeIdx] = isNaN(v) ? 0 : v;
+
+  const par = state.pars[holeIdx];
+  const pts = calcHolePts(v, par, playerId, holeIdx);
+  const ptsEl = document.getElementById(`pts-${playerId}-${holeIdx}`);
+  if (ptsEl) {
+    ptsEl.textContent = (v > 0) ? pts : '—';
+    ptsEl.className = 'hole-pts ' + (v > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '');
+  }
+  updateTotals(playerId);
+}
+
+function calcHolePts(gross, par, playerId, holeIdx) {
+  if (!gross || gross <= 0) return 0;
+  const p = state.players.find(pl => pl.id === playerId);
+  if (!p) return 0;
+  const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
+  const holeSI = state.si[holeIdx] || (holeIdx + 1);
+
+  let strokesOnHole = 0;
+  if (playHcp >= 0) {
+    // Normal handicap: shots on hardest holes first (lowest SI)
+    const fullRounds = Math.floor(playHcp / 18);
+    const remainder = playHcp % 18;
+    strokesOnHole = fullRounds + (holeSI <= remainder ? 1 : 0);
+  } else {
+    // Plus handicap (playHcp is negative, e.g. -2):
+    // They concede shots — deducted from the EASIEST holes (highest SI)
+    // e.g. +2 playing hcp: lose 1 shot on SI 18 and SI 17
+    const shotsToGiveBack = Math.abs(playHcp);
+    const easiestSI = 19 - shotsToGiveBack; // SI threshold: give shots back on SI >= this
+    strokesOnHole = holeSI >= easiestSI ? -1 : 0;
+  }
+
+  const nettScore = gross - strokesOnHole;
+  const diff = par - nettScore;
+  return Math.max(0, diff + 2);
+}
+
+function updateTotals(playerId) {
+  const scores = state.scores[playerId] || Array(18).fill(0);
+  const grossFront = scores.slice(0,9).reduce((a,b) => a + b, 0);
+  const grossBack = scores.slice(9).reduce((a,b) => a + b, 0);
+  const grossTotal = grossFront + grossBack;
+
+  const p = state.players.find(pl => pl.id === playerId);
+  const playHcp = p ? calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance) : 0;
+  const nett = grossTotal > 0 ? grossTotal - playHcp : 0;
+
+  let totalPts = 0;
+  for (let i = 0; i < 18; i++) {
+    if (scores[i] > 0) totalPts += calcHolePts(scores[i], state.pars[i], playerId, i);
+  }
+
+  document.getElementById('totalGrossFront').textContent = grossFront || '—';
+  document.getElementById('totalGrossBack').textContent = grossBack || '—';
+  document.getElementById('totalGross').textContent = grossTotal || '—';
+  document.getElementById('totalNett').textContent = (grossTotal > 0 ? nett : '—');
+  document.getElementById('totalPts').textContent = totalPts || '—';
+}
+
+function saveScore() {
+  if (!state.activePlayer) return;
+  const p = state.players.find(pl => pl.id === state.activePlayer);
+  // Highlight saved button
+  const btn = document.querySelector(`#psel-${state.activePlayer}`);
+  if (btn) { btn.className = 'btn btn-primary'; btn.textContent = '✓ ' + p.name; }
+  showAlert('Score saved for ' + p.name + '!');
+}
+
+function clearScore() {
+  if (!state.activePlayer) return;
+  state.scores[state.activePlayer] = Array(18).fill(0);
+  renderScorecard(state.activePlayer);
+  updateTotals(state.activePlayer);
+}
+
+function showAlert(msg) {
+  const a = document.createElement('div');
+  a.className = 'alert alert-success';
+  a.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999;min-width:280px;box-shadow:0 4px 20px rgba(0,0,0,0.1);';
+  a.textContent = '✓ ' + msg;
+  document.body.appendChild(a);
+  setTimeout(() => a.remove(), 3000);
+}
+
+// ═══════════════════════════════════════════
+//  HANDICAP ALLOWANCE (DYNAMIC)
+// ═══════════════════════════════════════════
+function updateHcpAllowance(val) {
+  state.comp.hcpAllowance = parseInt(val);
+  document.getElementById('hcpSlider').value = val;
+  document.getElementById('hcpSliderLb').value = val;
+  document.getElementById('hcpSliderVal').textContent = val + '%';
+  document.getElementById('hcpSliderLbVal').textContent = val + '%';
+  document.getElementById('barHcp').textContent = val + '%';
+  document.getElementById('hcpAllowance').value = val;
+
+  renderPlayerTable();
+  if (state.activePlayer) {
+    const p = state.players.find(pl => pl.id === state.activePlayer);
+    if (p) {
+      const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
+      document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} · Playing HCP: ${formatPlayingHcp(playHcp)}`;
+    }
+    renderScorecard(state.activePlayer);
+    updateTotals(state.activePlayer);
+  }
+  buildLeaderboard();
+}
+
+function recalcAllScores() {
+  if (state.activePlayer) {
+    renderScorecard(state.activePlayer);
+    updateTotals(state.activePlayer);
+  }
+  showAlert('All scores recalculated with ' + state.comp.hcpAllowance + '% allowance');
+}
+
+// ═══════════════════════════════════════════
+//  LEADERBOARD
+// ═══════════════════════════════════════════
+function buildLeaderboard() {
+  const compName = state.comp.name || 'Competition';
+  document.getElementById('lbTitle').textContent = compName;
+  document.getElementById('lbSub').textContent = state.comp.course + (state.comp.date ? ' · ' + new Date(state.comp.date).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'}) : '');
+  document.getElementById('lbTimestamp').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IE',{hour:'2-digit',minute:'2-digit'});
+
+  const rows = state.players.map(p => {
+    const scores = state.scores[p.id] || Array(18).fill(0);
+    const gross = scores.reduce((a,b) => a+b, 0);
+    const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
+    const nett = gross > 0 ? gross - playHcp : null;
+    let pts = 0;
+    let holesPlayed = 0;
+    for (let i = 0; i < 18; i++) {
+      if (scores[i] > 0) { pts += calcHolePts(scores[i], state.pars[i], p.id, i); holesPlayed++; }
+    }
+    return { ...p, gross, nett, pts, holesPlayed, playHcp };
+  });
+
+  // Sort by points desc, then nett asc
+  const sorted = [...rows].sort((a, b) => {
+    if (b.pts !== a.pts) return b.pts - a.pts;
+    if (a.nett !== null && b.nett !== null) return a.nett - b.nett;
+    return 0;
+  });
+
+  const tbody = document.getElementById('leaderboardBody');
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:var(--grey);padding:28px;font-size:13px;">No players added yet</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = sorted.map((p, i) => {
+    const hasAnyScore = p.holesPlayed > 0;
+    const posClass = i===0?'pos-1':i===1?'pos-2':i===2?'pos-3':'pos-other';
+    const status = !hasAnyScore ? 'pending' : p.holesPlayed < 18 ? 'live' : 'done';
+    const statusLabel = status === 'pending' ? 'Not started' : status === 'live' ? `${p.holesPlayed}/18 holes` : 'Complete';
+
+    return `<tr>
+      <td><span class="pos-badge ${posClass}">${i+1}</span></td>
+      <td><strong>${p.name}</strong></td>
+      <td><span class="mono" style="color:var(--grey);">${formatHcpIndex(p.hcpIndex)} → <strong style="color:var(--ink);">${formatPlayingHcp(p.playHcp)}</strong></span></td>
+      <td>${hasAnyScore ? `<span class="score-chip score-grey">${p.gross}</span>` : '<span style="color:var(--stone)">—</span>'}</td>
+      <td>${hasAnyScore && p.nett !== null ? `<span class="score-chip score-green">${p.nett}</span>` : '<span style="color:var(--stone)">—</span>'}</td>
+      <td style="text-align:right;">
+        ${hasAnyScore ? `<div><div class="pts-big">${p.pts}</div><div class="pts-label">pts</div></div>` : '<span style="color:var(--stone)">—</span>'}
+      </td>
+      <td><span class="status-dot dot-${status}"></span><span style="font-size:12px;color:var(--grey);">${statusLabel}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function shareLeaderboard() {
+  buildLeaderboard();
+  const rows = state.players.map(p => {
+    const scores = state.scores[p.id] || Array(18).fill(0);
+    const gross = scores.reduce((a,b) => a+b, 0);
+    const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
+    const nett = gross > 0 ? gross - playHcp : null;
+    let pts = 0;
+    for (let i = 0; i < 18; i++) {
+      if (scores[i] > 0) pts += calcHolePts(scores[i], state.pars[i], p.id, i);
+    }
+    return { ...p, gross, nett, pts, playHcp };
+  }).sort((a,b) => b.pts - a.pts);
+
+  const date = state.comp.date ? new Date(state.comp.date).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'}) : '';
+  let text = `🏌️ ${state.comp.name}\n📍 ${state.comp.course} · ${date}\n\n`;
+  text += `RESULTS (Stableford — ${state.comp.hcpAllowance}% hcp)\n`;
+  text += `${'─'.repeat(36)}\n`;
+  rows.forEach((p, i) => {
+    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'   ';
+    text += `${medal} ${i+1}. ${p.name.padEnd(18)} ${p.pts > 0 ? p.pts + ' pts' : '–'}\n`;
+    if (p.gross > 0) text += `       Gross: ${p.gross} | Nett: ${p.nett} | HCP: ${formatPlayingHcp(p.playHcp)}\n`;
+  });
+  text += `\n🍀 scratchcups.ie`;
+
+  document.getElementById('shareTitle').textContent = state.comp.name;
+  document.getElementById('shareSubtitle').textContent = state.comp.course + ' · ' + date;
+  document.getElementById('shareResults').textContent = text;
+  document.getElementById('shareCard').style.display = 'block';
+  document.getElementById('shareCard').scrollIntoView({ behavior: 'smooth' });
+}
+
+// ═══════════════════════════════════════════
+//  COURSE CSV TEMPLATE & IMPORT
+// ═══════════════════════════════════════════
+function downloadCourseTemplate() {
+  const rows = [
+    'Hole,Par,SI',
+    '1,4,1',
+    '2,4,2',
+    '3,3,3',
+    '4,5,4',
+    '5,4,5',
+    '6,4,6',
+    '7,3,7',
+    '8,5,8',
+    '9,4,9',
+    '10,4,10',
+    '11,4,11',
+    '12,3,12',
+    '13,5,13',
+    '14,4,14',
+    '15,4,15',
+    '16,3,16',
+    '17,5,17',
+    '18,4,18',
+  ];
+  const csv = rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'course-setup-template.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function importCourseCSV(input) {
+  const file = input.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    const lines = e.target.result.trim().split(/\r?\n/);
+    const statusEl = document.getElementById('courseCSVStatus');
+    const errors = [];
+    let loaded = 0;
+
+    // Find header row — look for Hole, Par, SI columns (case-insensitive)
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const holeIdx = headers.findIndex(h => h === 'hole');
+    const parIdx  = headers.findIndex(h => h === 'par');
+    const siIdx   = headers.findIndex(h => h === 'si');
+
+    if (parIdx === -1 || siIdx === -1) {
+      statusEl.textContent = '❌ Missing required columns: Par and SI';
+      statusEl.style.color = 'var(--red)';
+      input.value = '';
+      return;
+    }
+
+    for (let i = 1; i < lines.length; i++) {
+      const line = lines[i].trim();
+      if (!line) continue;
+      const cols = line.split(',');
+
+      const holeNum = holeIdx !== -1 ? parseInt(cols[holeIdx]) : i;
+      const par = parseInt(cols[parIdx]);
+      const si  = parseInt(cols[siIdx]);
+
+      if (isNaN(par) || par < 3 || par > 6) {
+        errors.push(`Row ${i+1}: invalid par "${cols[parIdx]}"`);
+        continue;
+      }
+      if (isNaN(si) || si < 1 || si > 18) {
+        errors.push(`Row ${i+1}: invalid SI "${cols[siIdx]}"`);
+        continue;
+      }
+
+      const idx = holeIdx !== -1 ? (holeNum - 1) : (i - 1);
+      if (idx >= 0 && idx < 18) {
+        state.pars[idx] = par;
+        state.si[idx]   = si;
+        loaded++;
+      }
+    }
+
+    // Re-render the hole cells with new values
+    buildParInputs();
+    validateSI();
+    updateParSum();
+
+    if (errors.length > 0) {
+      statusEl.innerHTML = `✓ Loaded ${loaded} holes · ⚠ ${errors.length} row(s) skipped`;
+      statusEl.style.color = 'var(--gold)';
+    } else {
+      statusEl.textContent = `✓ ${loaded} holes loaded from ${file.name}`;
+      statusEl.style.color = 'var(--green-dark)';
+    }
+    input.value = ''; // allow re-import
+  };
+  reader.readAsText(file);
+}
+
+function downloadTemplate() {
+  const csv = [
+    'Name,HandicapIndex,Email,Phone,Club,GUI_Number',
+    'Seán Murphy,5.2,sean@example.com,+353851234567,Portmarnock GC,12345',
+    'Ciarán O\'Brien,11.8,ciaran@example.com,,Royal Dublin,',
+    'Pádraig Kelly,-2.1,padraig@example.com,,Ballybunion GC,67890',
+  ].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'players-template.csv';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+// pending CSV file text (two-step: choose then load)
+let pendingCSVText = null;
+
+function csvFileChosen(input) {
+  const file = input.files[0];
+  if (!file) return;
+  document.getElementById('csvFileName').textContent = file.name;
+  document.getElementById('csvImportResult').innerHTML = '';
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    pendingCSVText = e.target.result;
+    document.getElementById('csvLoadBtn').style.display = 'inline-flex';
+  };
+  reader.readAsText(file);
+}
+
+function loadChosenCSV() {
+  if (!pendingCSVText) return;
+  const result = parsePlayerCSV(pendingCSVText);
+  const resultEl = document.getElementById('csvImportResult');
+
+  if (result.errors.length > 0 && result.players.length === 0) {
+    resultEl.innerHTML = `<div class="alert" style="background:#fdf0f0;color:var(--red);border:1px solid #f5c6c6;">
+      ❌ Import failed:<br>${result.errors.join('<br>')}
+    </div>`;
+    return;
+  }
+
+  let added = 0, skipped = 0;
+  result.players.forEach(p => {
+    const exists = state.players.some(ex => ex.name.toLowerCase() === p.name.toLowerCase());
+    if (exists) { skipped++; return; }
+    state.players.push({ id: Date.now() + Math.random(), ...p });
+    added++;
+  });
+
+  renderPlayerTable();
+  pendingCSVText = null;
+  document.getElementById('csvFileInput').value = '';
+  document.getElementById('csvFileName').textContent = 'No file chosen';
+  document.getElementById('csvLoadBtn').style.display = 'none';
+
+  let msg = `✓ Loaded <strong>${added}</strong> player${added !== 1 ? 's' : ''}`;
+  if (skipped > 0) msg += ` · <strong>${skipped}</strong> skipped (duplicates)`;
+  if (result.errors.length > 0) msg += `<br><span style="font-size:12px;opacity:0.8;">⚠ Rows with errors: ${result.errors.join('; ')}</span>`;
+  resultEl.innerHTML = `<div class="alert alert-success">${msg}</div>`;
+}
+
+function clearAllPlayers() {
+  if (!confirm(`Remove all ${state.players.length} players? This cannot be undone.`)) return;
+  state.players = [];
+  state.scores = {};
+  state.activePlayer = null;
+  renderPlayerTable();
+  document.getElementById('csvImportResult').innerHTML = '';
+  showAlert('All players removed.');
+}
+
+function parsePlayerCSV(text) {
+  const lines = text.trim().split(/\r?\n/);
+  const errors = [];
+  const players = [];
+
+  if (lines.length < 2) {
+    errors.push('File appears empty or has no data rows');
+    return { players, errors };
+  }
+
+  const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+  const nameIdx = headers.findIndex(h => h === 'name');
+  const hcpIdx  = headers.findIndex(h => h === 'handicapindex');
+
+  if (nameIdx === -1) { errors.push('Missing required column: Name'); return { players, errors }; }
+  if (hcpIdx  === -1) { errors.push('Missing required column: HandicapIndex'); return { players, errors }; }
+
+  const emailIdx = headers.findIndex(h => h === 'email');
+  const phoneIdx = headers.findIndex(h => h === 'phone');
+  const clubIdx  = headers.findIndex(h => h === 'club');
+  const guiIdx   = headers.findIndex(h => h === 'gui_number');
+
+  for (let i = 1; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (!line) continue;
+    const cols = parseCSVLine(line);
+    const name   = (cols[nameIdx] || '').trim();
+    const hcpRaw = (cols[hcpIdx]  || '').trim();
+    if (!name) { errors.push(`Row ${i+1}: missing name`); continue; }
+    const hcp = parseFloat(hcpRaw);
+    if (isNaN(hcp) || hcp < -10 || hcp > 54) {
+      errors.push(`Row ${i+1} (${name}): invalid handicap "${hcpRaw}"`);
+      continue;
+    }
+    const player = { name, hcpIndex: hcp };
+    if (emailIdx !== -1 && cols[emailIdx]) player.email = cols[emailIdx].trim();
+    if (phoneIdx !== -1 && cols[phoneIdx]) player.phone = cols[phoneIdx].trim();
+    if (clubIdx  !== -1 && cols[clubIdx])  player.club  = cols[clubIdx].trim();
+    if (guiIdx   !== -1 && cols[guiIdx])   player.gui   = cols[guiIdx].trim();
+    players.push(player);
+  }
+  return { players, errors };
+}
+
+function parseCSVLine(line) {
+  const cols = [];
+  let field = '', inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (ch === '"') { inQuote = !inQuote; }
+    else if (ch === ',' && !inQuote) { cols.push(field); field = ''; }
+    else { field += ch; }
+  }
+  cols.push(field);
+  return cols;
+}
+
+function copyShareText() {
+  const text = document.getElementById('shareResults').textContent;
+  navigator.clipboard.writeText(text).then(() => showAlert('Copied to clipboard — ready to paste into WhatsApp!'));
+}
+
+
+</script>
+</body>
+</html>
