@@ -525,6 +525,85 @@
     .comp-bar { padding: 12px 16px; gap: 16px; }
   }
 </style>
+<!-- Supabase SDK -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = 'https://uxlndfyxiftepvtdbryn.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_X1XRELXJV0WJXoaXY6mlkw_iUKhO9WW';
+  const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+  // ── SAVE competition to Supabase ──
+  async function saveCompetition() {
+    const comp = state.comp;
+    const payload = {
+      name: comp.name,
+      course: comp.course,
+      date: comp.date || null,
+      format: comp.format,
+      par: comp.par,
+      course_rating: comp.courseRating,
+      slope_rating: comp.slopeRating,
+      hcp_allowance: comp.hcpAllowance,
+      pars: state.pars,
+      si: state.si
+    };
+
+    let compId = state.savedCompId;
+
+    if (compId) {
+      // Update existing
+      const { error } = await db.from('competitions').update(payload).eq('id', compId);
+      if (error) { console.error('Save error:', error); return null; }
+    } else {
+      // Insert new
+      const { data, error } = await db.from('competitions').insert(payload).select().single();
+      if (error) { console.error('Save error:', error); return null; }
+      compId = data.id;
+      state.savedCompId = compId;
+    }
+
+    // Save players
+    for (const p of state.players) {
+      if (p.dbId) continue; // already saved
+      const { data, error } = await db.from('players').insert({
+        competition_id: compId,
+        name: p.name,
+        hcp_index: p.hcpIndex,
+        email: p.email || null,
+        phone: p.phone || null,
+        club: p.club || null,
+        gui_number: p.gui || null
+      }).select().single();
+      if (!error) p.dbId = data.id;
+    }
+
+    // Save scores
+    for (const p of state.players) {
+      if (!p.dbId || !state.scores[p.id]) continue;
+      await db.from('scores').upsert({
+        player_id: p.dbId,
+        competition_id: compId,
+        scores: state.scores[p.id],
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'player_id,competition_id' });
+    }
+
+    return compId;
+  }
+
+  // Auto-save scores after each hole entry
+  async function autoSaveScores() {
+    if (!state.savedCompId) return; // only if competition already saved
+    const p = state.players.find(x => x.id === state.activePlayer);
+    if (!p?.dbId || !state.scores[p.id]) return;
+    await db.from('scores').upsert({
+      player_id: p.dbId,
+      competition_id: state.savedCompId,
+      scores: state.scores[p.id],
+      updated_at: new Date().toISOString()
+    }, { onConflict: 'player_id,competition_id' });
+  }
+</script>
 </head>
 <body>
 
@@ -532,7 +611,7 @@
 
 <header>
   <div class="logo">
-    <div class="logo-icon">⛳</div>
+    <img src="https://scratchcups.ie/wp-content/uploads/elementor/thumbs/Green-Transparent-rhnkf3dgszw9xztdyfg9yzrb9bw8loct5f62hh143k.png" alt="Scratch Cups Ireland" style="height:52px;width:auto;display:block;">
     <div class="logo-text">
       <h1>Scratch Cups Ireland</h1>
       <span>Competition Manager</span>
@@ -678,7 +757,11 @@
     </p>
   </div>
 
-  <button class="btn btn-primary" onclick="saveSetup()">Save & Continue to Players →</button>
+  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+    <button class="btn btn-primary" onclick="saveSetup()">Save & Continue to Players →</button>
+    <button class="btn btn-secondary" onclick="saveToCloud()" id="cloudSaveBtn">☁ Save to Cloud</button>
+    <span id="cloudSaveStatus" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--grey);"></span>
+  </div>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -888,6 +971,7 @@
 // ═══════════════════════════════════════════
 const state = {
   comp: { name: '', course: '', date: '', format: 'stableford', par: 72, courseRating: 72.0, slopeRating: 113, hcpAllowance: 100 },
+  savedCompId: null,
   pars: Array(18).fill(4),
   si: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], // Stroke Index per hole (default sequential)
   players: [],
@@ -1167,6 +1251,7 @@ function onScoreInput(playerId, holeIdx, val) {
     ptsEl.className = 'hole-pts ' + (v > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '');
   }
   updateTotals(playerId);
+  autoSaveScores(); // persist to Supabase if competition is saved
 }
 
 function calcHolePts(gross, par, playerId, holeIdx) {
@@ -1596,7 +1681,37 @@ function parseCSVLine(line) {
   return cols;
 }
 
-function copyShareText() {
+// ── SAVE TO CLOUD ──
+async function saveToCloud() {
+  const btn = document.getElementById('cloudSaveBtn');
+  const status = document.getElementById('cloudSaveStatus');
+  if (!state.comp.name) {
+    showAlert('Please enter a competition name before saving.');
+    return;
+  }
+  btn.disabled = true;
+  btn.textContent = '☁ Saving…';
+  status.textContent = '';
+  try {
+    const id = await saveCompetition();
+    if (id) {
+      status.textContent = '✓ Saved — ID: ' + id.slice(0, 8) + '…';
+      status.style.color = 'var(--green-dark)';
+      btn.textContent = '☁ Saved';
+    } else {
+      status.textContent = '✗ Save failed — check console';
+      status.style.color = 'var(--red)';
+      btn.textContent = '☁ Save to Cloud';
+    }
+  } catch(e) {
+    status.textContent = '✗ Error: ' + e.message;
+    status.style.color = 'var(--red)';
+    btn.textContent = '☁ Save to Cloud';
+  }
+  btn.disabled = false;
+}
+
+
   const text = document.getElementById('shareResults').textContent;
   navigator.clipboard.writeText(text).then(() => showAlert('Copied to clipboard — ready to paste into WhatsApp!'));
 }
