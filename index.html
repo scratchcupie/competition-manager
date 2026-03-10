@@ -1099,7 +1099,9 @@ function goToScoring() {
 function buildScoringTab() {
   const btns = document.getElementById('playerSelectorBtns');
   btns.innerHTML = state.players.map(p => {
-    const hasScore = state.scores[p.id] && state.scores[p.id].some(s => s > 0);
+    const scores = state.scores[p.id] || [];
+    const holesEntered = scores.filter(s => s > 0).length;
+    const hasScore = holesEntered === 18;
     return `<button class="btn ${hasScore ? 'btn-primary' : 'btn-secondary'}"
       onclick="selectPlayer(${p.id})"
       id="psel-${p.id}">
