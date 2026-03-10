@@ -1063,7 +1063,9 @@ function renderPlayerTable() {
   }
   tbody.innerHTML = state.players.map((p, i) => {
     const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance || 100);
-    const hasScore = state.scores[p.id] && state.scores[p.id].some(s => s > 0);
+    const scores = state.scores[p.id] || [];
+    const holesEntered = scores.filter(s => s > 0).length;
+    const hasScore = holesEntered === 18;
     const isPlus = p.hcpIndex < 0;
     return `
     <tr>
