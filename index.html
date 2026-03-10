@@ -1171,6 +1171,7 @@ function onScoreInput(playerId, holeIdx, val) {
     ptsEl.className = 'hole-pts ' + (v > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '');
   }
   updateTotals(playerId);
+  buildScoringTab();
 }
 
 function calcHolePts(gross, par, playerId, holeIdx) {
@@ -1227,7 +1228,7 @@ function saveScore() {
   const p = state.players.find(pl => pl.id === state.activePlayer);
   // Highlight saved button
   const btn = document.querySelector(`#psel-${state.activePlayer}`);
-  if (btn) { btn.className = 'btn btn-primary'; btn.textContent = '✓ ' + p.name; }
+  buildScoringTab();
   showAlert('Score saved for ' + p.name + '!');
 }
 
