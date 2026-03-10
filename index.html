@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Scratch Cups Ireland â Competition Manager</title>
+<title>Scratch Cups Ireland — Competition Manager</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -29,7 +29,7 @@
     min-height: 100vh;
   }
 
-  /* ââ TOP BAR ââ */
+  /* ── TOP BAR ── */
   .topbar {
     background: var(--ink);
     color: var(--stone);
@@ -41,7 +41,7 @@
     text-transform: uppercase;
   }
 
-  /* ââ HEADER ââ */
+  /* ── HEADER ── */
   header {
     background: var(--white);
     border-bottom: 1px solid var(--stone);
@@ -93,7 +93,7 @@
     border: 1px solid var(--gold);
   }
 
-  /* ââ NAV TABS ââ */
+  /* ── NAV TABS ── */
   .nav-tabs {
     background: var(--white);
     border-bottom: 2px solid var(--stone);
@@ -126,10 +126,10 @@
     border-bottom-color: var(--green-dark);
   }
 
-  /* ââ MAIN CONTENT ââ */
+  /* ── MAIN CONTENT ── */
   .main { padding: 28px 24px; max-width: 960px; margin: 0 auto; }
 
-  /* ââ SECTION TITLE ââ */
+  /* ── SECTION TITLE ── */
   .section-title {
     font-family: 'Playfair Display', serif;
     font-size: 22px;
@@ -145,7 +145,7 @@
     margin-bottom: 24px;
   }
 
-  /* ââ CARD ââ */
+  /* ── CARD ── */
   .card {
     background: var(--white);
     border: 1px solid var(--stone);
@@ -165,7 +165,7 @@
     border-bottom: 1px solid var(--stone);
   }
 
-  /* ââ FORM ELEMENTS ââ */
+  /* ── FORM ELEMENTS ── */
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
   .form-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
   .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -192,7 +192,7 @@
     border-color: var(--green-dark);
   }
 
-  /* ââ BUTTONS ââ */
+  /* ── BUTTONS ── */
   .btn {
     display: inline-flex;
     align-items: center;
@@ -217,7 +217,7 @@
   .btn-danger { background: var(--red); color: white; }
   .btn-sm { padding: 6px 12px; font-size: 9px; }
 
-  /* ââ PLAYER TABLE ââ */
+  /* ── PLAYER TABLE ── */
   .player-table { width: 100%; border-collapse: collapse; }
   .player-table th {
     font-family: 'DM Mono', monospace;
@@ -251,7 +251,7 @@
     justify-content: center;
   }
 
-  /* ââ LEADERBOARD ââ */
+  /* ── LEADERBOARD ── */
   .leaderboard-table { width: 100%; border-collapse: collapse; }
   .leaderboard-table th {
     font-family: 'DM Mono', monospace;
@@ -324,7 +324,7 @@
     50% { opacity: 0.4; }
   }
 
-  /* ââ SCORE ENTRY ââ */
+  /* ── SCORE ENTRY ── */
   .scorecard-grid {
     display: grid;
     grid-template-columns: repeat(9, 1fr);
@@ -409,7 +409,7 @@
   }
   .total-divider { width: 1px; background: var(--stone); }
 
-  /* ââ COMPETITION INFO BAR ââ */
+  /* ── COMPETITION INFO BAR ── */
   .comp-bar {
     background: var(--green-dark);
     color: white;
@@ -438,7 +438,7 @@
   }
   .comp-bar-sep { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
 
-  /* ââ ALERTS ââ */
+  /* ── ALERTS ── */
   .alert {
     padding: 12px 16px;
     border-radius: 3px;
@@ -451,7 +451,7 @@
   .alert-success { background: var(--green-light); color: var(--green-dark); border: 1px solid #b8ddb9; }
   .alert-info { background: var(--gold-light); color: #7a5a1a; border: 1px solid #e8c87a; }
 
-  /* ââ HANDICAP CONTROL ââ */
+  /* ── HANDICAP CONTROL ── */
   .hcp-control {
     display: flex;
     align-items: center;
@@ -481,7 +481,7 @@
     text-align: center;
   }
 
-  /* ââ SHARE CARD ââ */
+  /* ── SHARE CARD ── */
   .share-card {
     background: var(--ink);
     color: white;
@@ -503,7 +503,7 @@
     margin-bottom: 20px;
   }
 
-  /* ââ UTILS ââ */
+  /* ── UTILS ── */
   .hidden { display: none !important; }
   .flex { display: flex; }
   .items-center { align-items: center; }
@@ -525,22 +525,14 @@
     .comp-bar { padding: 12px 16px; gap: 16px; }
   }
 </style>
-<!-- Supabase SDK -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-  const SUPABASE_URL = 'https://uxlndfyxiftepvtdbryn.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_X1XRELXJV0WJXoaXY6mlkw_iUKhO9WW';
-  let db = null;
-  try { db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY); } catch(e) { console.warn('Supabase offline:', e.message); }
-</script>
 </head>
 <body>
 
-<div class="topbar">Scratch Cups Ireland â Competition Manager Â· Demo Mode</div>
+<div class="topbar">Scratch Cups Ireland — Competition Manager · Demo Mode</div>
 
 <header>
   <div class="logo">
-    <img src="https://scratchcups.ie/wp-content/uploads/elementor/thumbs/Green-Transparent-rhnkf3dgszw9xztdyfg9yzrb9bw8loct5f62hh143k.png" alt="Scratch Cups Ireland" style="height:52px;width:auto;display:block;">
+    <div class="logo-icon">⛳</div>
     <div class="logo-text">
       <h1>Scratch Cups Ireland</h1>
       <span>Competition Manager</span>
@@ -553,17 +545,17 @@
 <div class="comp-bar hidden" id="compBar">
   <div class="comp-bar-item">
     <div class="comp-bar-label">Competition</div>
-    <div class="comp-bar-val" id="barCompName">â</div>
+    <div class="comp-bar-val" id="barCompName">—</div>
   </div>
   <div class="comp-bar-sep"></div>
   <div class="comp-bar-item">
     <div class="comp-bar-label">Course</div>
-    <div class="comp-bar-val" id="barCourse">â</div>
+    <div class="comp-bar-val" id="barCourse">—</div>
   </div>
   <div class="comp-bar-sep"></div>
   <div class="comp-bar-item">
     <div class="comp-bar-label">Date</div>
-    <div class="comp-bar-val" id="barDate">â</div>
+    <div class="comp-bar-val" id="barDate">—</div>
   </div>
   <div class="comp-bar-sep"></div>
   <div class="comp-bar-item">
@@ -584,15 +576,15 @@
 
 <!-- Nav Tabs -->
 <div class="nav-tabs">
-  <button class="nav-tab active" onclick="showTab('setup')">â  Setup</button>
-  <button class="nav-tab" onclick="showTab('players')">â¡ Players</button>
-  <button class="nav-tab" onclick="showTab('scoring')">â¢ Score Entry</button>
-  <button class="nav-tab" onclick="showTab('leaderboard')">â£ Leaderboard</button>
+  <button class="nav-tab active" onclick="showTab('setup')">① Setup</button>
+  <button class="nav-tab" onclick="showTab('players')">② Players</button>
+  <button class="nav-tab" onclick="showTab('scoring')">③ Score Entry</button>
+  <button class="nav-tab" onclick="showTab('leaderboard')">④ Leaderboard</button>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      TAB 1: SETUP
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div class="main" id="tab-setup">
   <p class="section-title">Competition Setup</p>
   <p class="section-sub">Configure your competition details</p>
@@ -602,7 +594,7 @@
     <div class="form-grid mb-4">
       <div class="form-group">
         <label>Competition Name</label>
-        <input type="text" id="compName" placeholder="e.g. Friday Society Stableford" value="Friday Lads â Spring Stableford">
+        <input type="text" id="compName" placeholder="e.g. Friday Society Stableford" value="Friday Lads — Spring Stableford">
       </div>
       <div class="form-group">
         <label>Golf Course</label>
@@ -624,29 +616,29 @@
   </div>
 
   <div class="card">
-    <div class="card-title">Course Setup â Par &amp; Stroke Index per Hole</div>
-    <p class="text-grey mb-3">Enter par and stroke index (SI) for each hole. SI 1 = hardest, SI 18 = easiest. Each SI must be unique (1â18).</p>
+    <div class="card-title">Course Setup — Par &amp; Stroke Index per Hole</div>
+    <p class="text-grey mb-3">Enter par and stroke index (SI) for each hole. SI 1 = hardest, SI 18 = easiest. Each SI must be unique (1–18).</p>
 
     <!-- Course template tools -->
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;padding:12px 14px;background:var(--mist);border:1px solid var(--stone);border-radius:3px;">
       <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--grey);flex:1;">Course Template</span>
-      <button class="btn btn-secondary btn-sm" onclick="downloadCourseTemplate()">â¬ Download Template</button>
-      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('courseCSVInput').click()">ð Load Course CSV</button>
+      <button class="btn btn-secondary btn-sm" onclick="downloadCourseTemplate()">⬇ Download Template</button>
+      <button class="btn btn-secondary btn-sm" onclick="document.getElementById('courseCSVInput').click()">📂 Load Course CSV</button>
       <input type="file" id="courseCSVInput" accept=".csv,.txt" style="display:none;" onchange="importCourseCSV(this)">
       <span id="courseCSVStatus" style="font-size:12px;color:var(--grey);">Fill in the template, save as CSV, then load it here</span>
     </div>
 
     <div class="alert alert-info" id="siWarning" style="display:none;">
-      â ï¸ Stroke index values must be unique (1â18). Please check for duplicates.
+      ⚠️ Stroke index values must be unique (1–18). Please check for duplicates.
     </div>
 
     <div style="margin-bottom: 10px;">
-      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Front Nine (Holes 1â9)</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Front Nine (Holes 1–9)</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;margin-bottom:20px;" id="setup-front"></div>
 
     <div style="margin-bottom: 10px;">
-      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Back Nine (Holes 10â18)</span>
+      <span style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);text-transform:uppercase;letter-spacing:0.1em;">Back Nine (Holes 10–18)</span>
     </div>
     <div style="display:grid;grid-template-columns:repeat(9,1fr);gap:6px;" id="setup-back"></div>
   </div>
@@ -654,7 +646,7 @@
   <div class="card">
     <div class="card-title">Competition Settings</div>
     <div class="alert alert-info">
-      â¹ï¸ Handicap allowance can be changed at any time â scores automatically recalculate.
+      ℹ️ Handicap allowance can be changed at any time — scores automatically recalculate.
     </div>
     <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;flex-wrap:wrap;">
       <div class="form-group">
@@ -681,21 +673,17 @@
       </div>
     </div>
     <p style="font-family:'DM Mono',monospace;font-size:10px;color:var(--grey);margin-top:10px;letter-spacing:0.05em;">
-      <strong>Course Rating (CR)</strong> â expected score for a scratch golfer under normal conditions. &nbsp;|&nbsp;
-      <strong>Slope Rating (SR)</strong> â measures course difficulty for a bogey golfer vs. scratch (standard = 113). Both are used in WHS playing handicap calculations.
+      <strong>Course Rating (CR)</strong> — expected score for a scratch golfer under normal conditions. &nbsp;|&nbsp;
+      <strong>Slope Rating (SR)</strong> — measures course difficulty for a bogey golfer vs. scratch (standard = 113). Both are used in WHS playing handicap calculations.
     </p>
   </div>
 
-  <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
-    <button class="btn btn-primary" onclick="saveSetup()">Save & Continue to Players â</button>
-    <button class="btn btn-secondary" onclick="saveToCloud()" id="cloudSaveBtn">â Save to Cloud</button>
-    <span id="cloudSaveStatus" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--grey);"></span>
-  </div>
+  <button class="btn btn-primary" onclick="saveSetup()">Save & Continue to Players →</button>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      TAB 2: PLAYERS
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div class="main hidden" id="tab-players">
   <p class="section-title">Players</p>
   <p class="section-sub">Add players manually, import from spreadsheet, or load demo data</p>
@@ -720,18 +708,18 @@
   <div class="card">
     <div class="card-title">Import from Spreadsheet</div>
     <div class="alert alert-info" style="margin-bottom:14px;">
-      ð Required column headers: <span style="font-family:'DM Mono',monospace;font-weight:600;">Name</span> and <span style="font-family:'DM Mono',monospace;font-weight:600;">HandicapIndex</span> â save as <strong>.csv</strong> before importing.
-      <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block;">Optional: <span style="font-family:'DM Mono',monospace;">Email Â· Phone Â· Club Â· GUI_Number</span> (for future online entry)</span>
+      📋 Required column headers: <span style="font-family:'DM Mono',monospace;font-weight:600;">Name</span> and <span style="font-family:'DM Mono',monospace;font-weight:600;">HandicapIndex</span> — save as <strong>.csv</strong> before importing.
+      <br><span style="font-size:11px;opacity:0.8;margin-top:4px;display:block;">Optional: <span style="font-family:'DM Mono',monospace;">Email · Phone · Club · GUI_Number</span> (for future online entry)</span>
     </div>
     <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap;">
-      <button class="btn btn-secondary btn-sm" onclick="downloadTemplate()">â¬ Download CSV Template</button>
-      <span style="font-size:12px;color:var(--grey);">â fill in Excel/Numbers/Google Sheets, save as CSV, then import below</span>
+      <button class="btn btn-secondary btn-sm" onclick="downloadTemplate()">⬇ Download CSV Template</button>
+      <span style="font-size:12px;color:var(--grey);">— fill in Excel/Numbers/Google Sheets, save as CSV, then import below</span>
     </div>
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
-      <button class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()">ð Choose CSV File</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('csvFileInput').click()">📂 Choose CSV File</button>
       <input type="file" id="csvFileInput" accept=".csv,.txt" style="display:none;" onchange="csvFileChosen(this)">
       <span id="csvFileName" style="font-size:13px;color:var(--grey);">No file chosen</span>
-      <button class="btn btn-primary" id="csvLoadBtn" style="display:none;" onclick="loadChosenCSV()">â¬ Load Players</button>
+      <button class="btn btn-primary" id="csvLoadBtn" style="display:none;" onclick="loadChosenCSV()">⬆ Load Players</button>
     </div>
     <div id="csvImportResult" style="margin-top:12px;"></div>
   </div>
@@ -741,7 +729,7 @@
       <span class="card-title" style="border:none;padding:0;margin:0;">Player List</span>
       <div style="display:flex;align-items:center;gap:10px;">
         <span id="playerCount" style="color:var(--grey);font-family:'DM Mono',monospace;font-size:11px;font-weight:300;">0 players</span>
-        <button class="btn btn-sm btn-danger" id="clearAllBtn" style="display:none;" onclick="clearAllPlayers()">â Remove All</button>
+        <button class="btn btn-sm btn-danger" id="clearAllBtn" style="display:none;" onclick="clearAllPlayers()">✕ Remove All</button>
       </div>
     </div>
     <table class="player-table" id="playerTable">
@@ -762,21 +750,21 @@
   </div>
 
   <div class="flex gap-2">
-    <button class="btn btn-secondary" onclick="showTab('setup')">â Back</button>
-    <button class="btn btn-primary" onclick="goToScoring()">Continue to Score Entry â</button>
+    <button class="btn btn-secondary" onclick="showTab('setup')">← Back</button>
+    <button class="btn btn-primary" onclick="goToScoring()">Continue to Score Entry →</button>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      TAB 3: SCORE ENTRY
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div class="main hidden" id="tab-scoring">
   <p class="section-title">Score Entry</p>
-  <p class="section-sub">Enter gross scores â points calculate automatically</p>
+  <p class="section-sub">Enter gross scores — points calculate automatically</p>
 
   <!-- Dynamic handicap control -->
   <div class="hcp-control">
-    <span class="hcp-label">â Handicap Allowance (live)</span>
+    <span class="hcp-label">⚙ Handicap Allowance (live)</span>
     <input type="range" class="hcp-slider" id="hcpSlider" min="0" max="100" step="5" value="100" oninput="updateHcpAllowance(this.value)">
     <span class="hcp-val" id="hcpSliderVal">100%</span>
     <button class="btn btn-sm btn-secondary" onclick="recalcAllScores()">Recalculate All</button>
@@ -801,47 +789,47 @@
 
       <div class="score-totals" id="scoreTotals">
         <div class="total-item">
-          <div class="total-val" id="totalGrossFront">â</div>
+          <div class="total-val" id="totalGrossFront">—</div>
           <div class="total-lbl">Gross (F9)</div>
         </div>
         <div class="total-divider"></div>
         <div class="total-item">
-          <div class="total-val" id="totalGrossBack">â</div>
+          <div class="total-val" id="totalGrossBack">—</div>
           <div class="total-lbl">Gross (B9)</div>
         </div>
         <div class="total-divider"></div>
         <div class="total-item">
-          <div class="total-val" id="totalGross">â</div>
+          <div class="total-val" id="totalGross">—</div>
           <div class="total-lbl">Gross Total</div>
         </div>
         <div class="total-divider"></div>
         <div class="total-item">
-          <div class="total-val" id="totalNett">â</div>
+          <div class="total-val" id="totalNett">—</div>
           <div class="total-lbl">Nett Score</div>
         </div>
         <div class="total-divider"></div>
         <div class="total-item">
-          <div class="total-val" id="totalPts" style="color:var(--gold)">â</div>
+          <div class="total-val" id="totalPts" style="color:var(--gold)">—</div>
           <div class="total-lbl">Stableford Pts</div>
         </div>
       </div>
 
       <div style="margin-top:16px;">
-        <button class="btn btn-primary" onclick="saveScore()">Save Scorecard â</button>
+        <button class="btn btn-primary" onclick="saveScore()">Save Scorecard ✓</button>
         <button class="btn btn-secondary" style="margin-left:8px;" onclick="clearScore()">Clear</button>
       </div>
     </div>
   </div>
 
   <div class="flex gap-2" style="margin-top:8px;">
-    <button class="btn btn-secondary" onclick="showTab('players')">â Back</button>
-    <button class="btn btn-gold" onclick="showTab('leaderboard')">View Leaderboard â</button>
+    <button class="btn btn-secondary" onclick="showTab('players')">← Back</button>
+    <button class="btn btn-gold" onclick="showTab('leaderboard')">View Leaderboard →</button>
   </div>
 </div>
 
-<!-- ââââââââââââââââââââââââââââââââââââââââ
+<!-- ════════════════════════════════════════
      TAB 4: LEADERBOARD
-ââââââââââââââââââââââââââââââââââââââââ -->
+════════════════════════════════════════ -->
 <div class="main hidden" id="tab-leaderboard">
   <div class="flex justify-between items-center mb-3" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
     <div>
@@ -849,21 +837,21 @@
       <p class="section-sub" id="lbSub">Live standings</p>
     </div>
     <div class="flex gap-2" style="display:flex;gap:8px;">
-      <button class="btn btn-secondary btn-sm" onclick="showTab('scoring')">â Score Entry</button>
-      <button class="btn btn-gold btn-sm" onclick="shareLeaderboard()">Share â</button>
+      <button class="btn btn-secondary btn-sm" onclick="showTab('scoring')">← Score Entry</button>
+      <button class="btn btn-gold btn-sm" onclick="shareLeaderboard()">Share ↗</button>
     </div>
   </div>
 
   <!-- Handicap control on leaderboard too -->
   <div class="hcp-control">
-    <span class="hcp-label">â Handicap Allowance</span>
+    <span class="hcp-label">⚙ Handicap Allowance</span>
     <input type="range" class="hcp-slider" id="hcpSliderLb" min="0" max="100" step="5" value="100" oninput="updateHcpAllowance(this.value)">
     <span class="hcp-val" id="hcpSliderLbVal">100%</span>
   </div>
 
   <div class="card">
     <div class="card-title flex justify-between" style="display:flex;justify-content:space-between;">
-      <span>Standings â Stableford</span>
+      <span>Standings — Stableford</span>
       <span id="lbTimestamp" style="font-weight:300;color:var(--grey);"></span>
     </div>
     <table class="leaderboard-table" id="leaderboardTable">
@@ -887,20 +875,19 @@
   <!-- Share card -->
   <div class="share-card" id="shareCard" style="display:none;">
     <h3 id="shareTitle">Competition Results</h3>
-    <div class="share-sub" id="shareSubtitle">â</div>
+    <div class="share-sub" id="shareSubtitle">—</div>
     <div id="shareResults" style="font-family:'DM Mono',monospace;font-size:13px;text-align:left;background:rgba(255,255,255,0.05);border-radius:3px;padding:16px;margin-bottom:16px;white-space:pre-line;line-height:1.8;"></div>
-    <button class="btn btn-gold" onclick="copyShareText()">ð Copy for WhatsApp</button>
+    <button class="btn btn-gold" onclick="copyShareText()">📋 Copy for WhatsApp</button>
     <button class="btn btn-secondary" style="margin-left:8px;background:transparent;color:rgba(255,255,255,0.5);border-color:rgba(255,255,255,0.2);" onclick="document.getElementById('shareCard').style.display='none'">Close</button>
   </div>
 </div>
 
 <script>
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  STATE
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 const state = {
   comp: { name: '', course: '', date: '', format: 'stableford', par: 72, courseRating: 72.0, slopeRating: 113, hcpAllowance: 100 },
-  savedCompId: null,
   pars: Array(18).fill(4),
   si: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], // Stroke Index per hole (default sequential)
   players: [],
@@ -908,72 +895,14 @@ const state = {
   activePlayer: null
 };
 
-// âââââââââââââââââââââââââââââââââââââââââââ
-//  SUPABASE FUNCTIONS
-// âââââââââââââââââââââââââââââââââââââââââââ
-async function saveCompetition() {
-  if (!db) { console.warn('No DB connection'); return null; }
-  const comp = state.comp;
-  const payload = {
-    name: comp.name, course: comp.course, date: comp.date || null,
-    format: comp.format, par: comp.par, course_rating: comp.courseRating,
-    slope_rating: comp.slopeRating, hcp_allowance: comp.hcpAllowance,
-    pars: state.pars, si: state.si
-  };
-  let compId = state.savedCompId;
-  if (compId) {
-    const { error } = await db.from('competitions').update(payload).eq('id', compId);
-    if (error) { console.error('Save error:', error); return null; }
-  } else {
-    const { data, error } = await db.from('competitions').insert(payload).select().single();
-    if (error) { console.error('Save error:', error); return null; }
-    compId = data.id;
-    state.savedCompId = compId;
-  }
-  for (const p of state.players) {
-    if (p.dbId) continue;
-    const { data, error } = await db.from('players').insert({
-      competition_id: compId, name: p.name, hcp_index: p.hcpIndex,
-      email: p.email || null, phone: p.phone || null, club: p.club || null, gui_number: p.gui || null
-    }).select().single();
-    if (!error) p.dbId = data.id;
-  }
-  for (const p of state.players) {
-    if (!p.dbId || !state.scores[p.id]) continue;
-    await db.from('scores').upsert({
-      player_id: p.dbId, competition_id: compId,
-      scores: state.scores[p.id], updated_at: new Date().toISOString()
-    }, { onConflict: 'player_id,competition_id' });
-  }
-  return compId;
-}
-
-async function autoSaveScores() {
-  if (!db || !state.savedCompId) return;
-  const p = state.players.find(x => x.id === state.activePlayer);
-  if (!p?.dbId || !state.scores[p.id]) return;
-  await db.from('scores').upsert({
-    player_id: p.dbId, competition_id: state.savedCompId,
-    scores: state.scores[p.id], updated_at: new Date().toISOString()
-  }, { onConflict: 'player_id,competition_id' });
-}
-
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  INIT
-// âââââââââââââââââââââââââââââââââââââââââââ
-function initApp() {
+// ═══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
   // Set today's date
-  const dateEl = document.getElementById('compDate');
-  if (dateEl) dateEl.value = new Date().toISOString().split('T')[0];
+  document.getElementById('compDate').value = new Date().toISOString().split('T')[0];
   buildParInputs();
-}
-
-// Run immediately if DOM is ready, otherwise wait
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', initApp);
-} else {
-  initApp();
-}
+});
 
 function buildParInputs() {
   const frontParent = document.getElementById('setup-front');
@@ -1019,9 +948,9 @@ function validateSI() {
   }
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  TABS
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function showTab(tab) {
   ['setup','players','scoring','leaderboard'].forEach(t => {
     document.getElementById(`tab-${t}`).classList.add('hidden');
@@ -1035,9 +964,9 @@ function showTab(tab) {
   if (tab === 'leaderboard') buildLeaderboard();
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  SETUP
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function saveSetup() {
   state.comp.name = document.getElementById('compName').value || 'Competition';
   state.comp.course = document.getElementById('courseName').value || 'Golf Course';
@@ -1059,7 +988,7 @@ function saveSetup() {
   // Update bar
   document.getElementById('barCompName').textContent = state.comp.name;
   document.getElementById('barCourse').textContent = state.comp.course;
-  document.getElementById('barDate').textContent = state.comp.date ? new Date(state.comp.date).toLocaleDateString('en-IE', {day:'numeric',month:'short',year:'numeric'}) : 'â';
+  document.getElementById('barDate').textContent = state.comp.date ? new Date(state.comp.date).toLocaleDateString('en-IE', {day:'numeric',month:'short',year:'numeric'}) : '—';
   document.getElementById('barHcp').textContent = state.comp.hcpAllowance + '%';
   document.getElementById('compBar').classList.remove('hidden');
   document.getElementById('hcpSlider').value = state.comp.hcpAllowance;
@@ -1070,9 +999,9 @@ function saveSetup() {
   showTab('players');
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  PLAYERS
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function calcPlayingHcp(hcpIndex, allowance) {
   // Plus handicaps are negative numbers (e.g. +2.1 stored as -2.1)
   // Playing hcp = round(hcpIndex * allowance/100)
@@ -1081,13 +1010,13 @@ function calcPlayingHcp(hcpIndex, allowance) {
 }
 
 function formatHcpIndex(hcpIndex) {
-  // Display: negative stored value means plus handicap â show as "+2.1"
+  // Display: negative stored value means plus handicap — show as "+2.1"
   if (hcpIndex < 0) return `+${Math.abs(hcpIndex).toFixed(1)}`;
   return hcpIndex.toFixed(1);
 }
 
 function formatPlayingHcp(playHcp) {
-  // Playing hcp display: negative means plus (e.g. -2 â "+2")
+  // Playing hcp display: negative means plus (e.g. -2 → "+2")
   if (playHcp < 0) return `+${Math.abs(playHcp)}`;
   return `${playHcp}`;
 }
@@ -1096,7 +1025,7 @@ function addPlayer() {
   const name = document.getElementById('playerName').value.trim();
   const hcp = parseFloat(document.getElementById('playerHcp').value);
   if (!name) { alert('Please enter a player name'); return; }
-  if (isNaN(hcp) || hcp < -10 || hcp > 54) { alert('Please enter a valid handicap index (â10.0 to +54.0)'); return; }
+  if (isNaN(hcp) || hcp < -10 || hcp > 54) { alert('Please enter a valid handicap index (–10.0 to +54.0)'); return; }
   if (state.players.length >= 8) { alert('Maximum 8 players for demo'); return; }
   state.players.push({ id: Date.now(), name, hcpIndex: hcp });
   document.getElementById('playerName').value = '';
@@ -1108,14 +1037,14 @@ function addPlayer() {
 function addSamplePlayers() {
   state.players = [];
   const samples = [
-    { name: 'SeÃ¡n Murphy', hcpIndex: 5.2 },
-    { name: 'CiarÃ¡n O\'Brien', hcpIndex: 11.8 },
-    { name: 'PÃ¡draig Kelly', hcpIndex: 18.4 },
+    { name: 'Seán Murphy', hcpIndex: 5.2 },
+    { name: 'Ciarán O\'Brien', hcpIndex: 11.8 },
+    { name: 'Pádraig Kelly', hcpIndex: 18.4 },
     { name: 'Declan Walsh', hcpIndex: -2.1 },   // plus handicap
     { name: 'Fiona McCarthy', hcpIndex: 14.1 },
     { name: 'Brian Dunne', hcpIndex: 22.6 },
     { name: 'Aoife Ryan', hcpIndex: -0.5 },      // plus handicap
-    { name: 'TomÃ¡s Burke', hcpIndex: 28.3 },
+    { name: 'Tomás Burke', hcpIndex: 28.3 },
   ];
   samples.forEach((p, i) => state.players.push({ id: i + 1, ...p }));
   renderPlayerTable();
@@ -1146,7 +1075,7 @@ function renderPlayerTable() {
         <span class="status-dot ${hasScore ? 'dot-done' : 'dot-pending'}"></span>
         <span style="font-size:12px;color:var(--grey);">${hasScore ? 'Score entered' : 'Pending'}</span>
       </td>
-      <td><button class="btn btn-sm btn-danger" onclick="removePlayer(${p.id})">â</button></td>
+      <td><button class="btn btn-sm btn-danger" onclick="removePlayer(${p.id})">✕</button></td>
     </tr>`;
   }).join('');
 }
@@ -1162,9 +1091,9 @@ function goToScoring() {
   showTab('scoring');
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  SCORING
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function buildScoringTab() {
   const btns = document.getElementById('playerSelectorBtns');
   btns.innerHTML = state.players.map(p => {
@@ -1172,7 +1101,7 @@ function buildScoringTab() {
     return `<button class="btn ${hasScore ? 'btn-primary' : 'btn-secondary'}"
       onclick="selectPlayer(${p.id})"
       id="psel-${p.id}">
-      ${hasScore ? 'â ' : ''}${p.name}
+      ${hasScore ? '✓ ' : ''}${p.name}
     </button>`;
   }).join('');
   if (state.activePlayer) selectPlayer(state.activePlayer);
@@ -1186,7 +1115,7 @@ function selectPlayer(id) {
   document.getElementById('scorecardSection').classList.remove('hidden');
   const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
   document.getElementById('scorecardPlayerName').textContent = p.name;
-  document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} Â· Playing HCP: ${formatPlayingHcp(playHcp)}`;
+  document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} · Playing HCP: ${formatPlayingHcp(playHcp)}`;
 
   if (!state.scores[id]) state.scores[id] = Array(18).fill(0);
   renderScorecard(id);
@@ -1210,7 +1139,7 @@ function makeScoreCell(playerId, holeIdx) {
   const par = state.pars[holeIdx];
   const si = state.si[holeIdx] || (holeIdx + 1);
   const pts = calcHolePts(score, par, playerId, holeIdx);
-  const ptsDisplay = score > 0 ? pts : 'â';
+  const ptsDisplay = score > 0 ? pts : '—';
   const ptsClass = score > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '';
 
   div.innerHTML = `
@@ -1234,11 +1163,10 @@ function onScoreInput(playerId, holeIdx, val) {
   const pts = calcHolePts(v, par, playerId, holeIdx);
   const ptsEl = document.getElementById(`pts-${playerId}-${holeIdx}`);
   if (ptsEl) {
-    ptsEl.textContent = (v > 0) ? pts : 'â';
+    ptsEl.textContent = (v > 0) ? pts : '—';
     ptsEl.className = 'hole-pts ' + (v > 0 ? (pts > 2 ? 'pts-pos' : pts === 2 ? 'pts-par' : 'pts-neg') : '');
   }
   updateTotals(playerId);
-  autoSaveScores(); // persist to Supabase if competition is saved
 }
 
 function calcHolePts(gross, par, playerId, holeIdx) {
@@ -1256,7 +1184,7 @@ function calcHolePts(gross, par, playerId, holeIdx) {
     strokesOnHole = fullRounds + (holeSI <= remainder ? 1 : 0);
   } else {
     // Plus handicap (playHcp is negative, e.g. -2):
-    // They concede shots â deducted from the EASIEST holes (highest SI)
+    // They concede shots — deducted from the EASIEST holes (highest SI)
     // e.g. +2 playing hcp: lose 1 shot on SI 18 and SI 17
     const shotsToGiveBack = Math.abs(playHcp);
     const easiestSI = 19 - shotsToGiveBack; // SI threshold: give shots back on SI >= this
@@ -1283,11 +1211,11 @@ function updateTotals(playerId) {
     if (scores[i] > 0) totalPts += calcHolePts(scores[i], state.pars[i], playerId, i);
   }
 
-  document.getElementById('totalGrossFront').textContent = grossFront || 'â';
-  document.getElementById('totalGrossBack').textContent = grossBack || 'â';
-  document.getElementById('totalGross').textContent = grossTotal || 'â';
-  document.getElementById('totalNett').textContent = (grossTotal > 0 ? nett : 'â');
-  document.getElementById('totalPts').textContent = totalPts || 'â';
+  document.getElementById('totalGrossFront').textContent = grossFront || '—';
+  document.getElementById('totalGrossBack').textContent = grossBack || '—';
+  document.getElementById('totalGross').textContent = grossTotal || '—';
+  document.getElementById('totalNett').textContent = (grossTotal > 0 ? nett : '—');
+  document.getElementById('totalPts').textContent = totalPts || '—';
 }
 
 function saveScore() {
@@ -1295,7 +1223,7 @@ function saveScore() {
   const p = state.players.find(pl => pl.id === state.activePlayer);
   // Highlight saved button
   const btn = document.querySelector(`#psel-${state.activePlayer}`);
-  if (btn) { btn.className = 'btn btn-primary'; btn.textContent = 'â ' + p.name; }
+  if (btn) { btn.className = 'btn btn-primary'; btn.textContent = '✓ ' + p.name; }
   showAlert('Score saved for ' + p.name + '!');
 }
 
@@ -1310,14 +1238,14 @@ function showAlert(msg) {
   const a = document.createElement('div');
   a.className = 'alert alert-success';
   a.style.cssText = 'position:fixed;top:20px;right:20px;z-index:999;min-width:280px;box-shadow:0 4px 20px rgba(0,0,0,0.1);';
-  a.textContent = 'â ' + msg;
+  a.textContent = '✓ ' + msg;
   document.body.appendChild(a);
   setTimeout(() => a.remove(), 3000);
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  HANDICAP ALLOWANCE (DYNAMIC)
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function updateHcpAllowance(val) {
   state.comp.hcpAllowance = parseInt(val);
   document.getElementById('hcpSlider').value = val;
@@ -1332,7 +1260,7 @@ function updateHcpAllowance(val) {
     const p = state.players.find(pl => pl.id === state.activePlayer);
     if (p) {
       const playHcp = calcPlayingHcp(p.hcpIndex, state.comp.hcpAllowance);
-      document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} Â· Playing HCP: ${formatPlayingHcp(playHcp)}`;
+      document.getElementById('scorecardHcpInfo').textContent = `HCP Index: ${formatHcpIndex(p.hcpIndex)} · Playing HCP: ${formatPlayingHcp(playHcp)}`;
     }
     renderScorecard(state.activePlayer);
     updateTotals(state.activePlayer);
@@ -1348,13 +1276,13 @@ function recalcAllScores() {
   showAlert('All scores recalculated with ' + state.comp.hcpAllowance + '% allowance');
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  LEADERBOARD
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function buildLeaderboard() {
   const compName = state.comp.name || 'Competition';
   document.getElementById('lbTitle').textContent = compName;
-  document.getElementById('lbSub').textContent = state.comp.course + (state.comp.date ? ' Â· ' + new Date(state.comp.date).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'}) : '');
+  document.getElementById('lbSub').textContent = state.comp.course + (state.comp.date ? ' · ' + new Date(state.comp.date).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'}) : '');
   document.getElementById('lbTimestamp').textContent = 'Updated ' + new Date().toLocaleTimeString('en-IE',{hour:'2-digit',minute:'2-digit'});
 
   const rows = state.players.map(p => {
@@ -1392,11 +1320,11 @@ function buildLeaderboard() {
     return `<tr>
       <td><span class="pos-badge ${posClass}">${i+1}</span></td>
       <td><strong>${p.name}</strong></td>
-      <td><span class="mono" style="color:var(--grey);">${formatHcpIndex(p.hcpIndex)} â <strong style="color:var(--ink);">${formatPlayingHcp(p.playHcp)}</strong></span></td>
-      <td>${hasAnyScore ? `<span class="score-chip score-grey">${p.gross}</span>` : '<span style="color:var(--stone)">â</span>'}</td>
-      <td>${hasAnyScore && p.nett !== null ? `<span class="score-chip score-green">${p.nett}</span>` : '<span style="color:var(--stone)">â</span>'}</td>
+      <td><span class="mono" style="color:var(--grey);">${formatHcpIndex(p.hcpIndex)} → <strong style="color:var(--ink);">${formatPlayingHcp(p.playHcp)}</strong></span></td>
+      <td>${hasAnyScore ? `<span class="score-chip score-grey">${p.gross}</span>` : '<span style="color:var(--stone)">—</span>'}</td>
+      <td>${hasAnyScore && p.nett !== null ? `<span class="score-chip score-green">${p.nett}</span>` : '<span style="color:var(--stone)">—</span>'}</td>
       <td style="text-align:right;">
-        ${hasAnyScore ? `<div><div class="pts-big">${p.pts}</div><div class="pts-label">pts</div></div>` : '<span style="color:var(--stone)">â</span>'}
+        ${hasAnyScore ? `<div><div class="pts-big">${p.pts}</div><div class="pts-label">pts</div></div>` : '<span style="color:var(--stone)">—</span>'}
       </td>
       <td><span class="status-dot dot-${status}"></span><span style="font-size:12px;color:var(--grey);">${statusLabel}</span></td>
     </tr>`;
@@ -1418,26 +1346,26 @@ function shareLeaderboard() {
   }).sort((a,b) => b.pts - a.pts);
 
   const date = state.comp.date ? new Date(state.comp.date).toLocaleDateString('en-IE',{day:'numeric',month:'long',year:'numeric'}) : '';
-  let text = `ðï¸ ${state.comp.name}\nð ${state.comp.course} Â· ${date}\n\n`;
-  text += `RESULTS (Stableford â ${state.comp.hcpAllowance}% hcp)\n`;
-  text += `${'â'.repeat(36)}\n`;
+  let text = `🏌️ ${state.comp.name}\n📍 ${state.comp.course} · ${date}\n\n`;
+  text += `RESULTS (Stableford — ${state.comp.hcpAllowance}% hcp)\n`;
+  text += `${'─'.repeat(36)}\n`;
   rows.forEach((p, i) => {
-    const medal = i===0?'ð¥':i===1?'ð¥':i===2?'ð¥':'   ';
-    text += `${medal} ${i+1}. ${p.name.padEnd(18)} ${p.pts > 0 ? p.pts + ' pts' : 'â'}\n`;
+    const medal = i===0?'🥇':i===1?'🥈':i===2?'🥉':'   ';
+    text += `${medal} ${i+1}. ${p.name.padEnd(18)} ${p.pts > 0 ? p.pts + ' pts' : '–'}\n`;
     if (p.gross > 0) text += `       Gross: ${p.gross} | Nett: ${p.nett} | HCP: ${formatPlayingHcp(p.playHcp)}\n`;
   });
-  text += `\nð scratchcups.ie`;
+  text += `\n🍀 scratchcups.ie`;
 
   document.getElementById('shareTitle').textContent = state.comp.name;
-  document.getElementById('shareSubtitle').textContent = state.comp.course + ' Â· ' + date;
+  document.getElementById('shareSubtitle').textContent = state.comp.course + ' · ' + date;
   document.getElementById('shareResults').textContent = text;
   document.getElementById('shareCard').style.display = 'block';
   document.getElementById('shareCard').scrollIntoView({ behavior: 'smooth' });
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 //  COURSE CSV TEMPLATE & IMPORT
-// âââââââââââââââââââââââââââââââââââââââââââ
+// ═══════════════════════════════════════════
 function downloadCourseTemplate() {
   const rows = [
     'Hole,Par,SI',
@@ -1481,14 +1409,14 @@ function importCourseCSV(input) {
     const errors = [];
     let loaded = 0;
 
-    // Find header row â look for Hole, Par, SI columns (case-insensitive)
+    // Find header row — look for Hole, Par, SI columns (case-insensitive)
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
     const holeIdx = headers.findIndex(h => h === 'hole');
     const parIdx  = headers.findIndex(h => h === 'par');
     const siIdx   = headers.findIndex(h => h === 'si');
 
     if (parIdx === -1 || siIdx === -1) {
-      statusEl.textContent = 'â Missing required columns: Par and SI';
+      statusEl.textContent = '❌ Missing required columns: Par and SI';
       statusEl.style.color = 'var(--red)';
       input.value = '';
       return;
@@ -1526,10 +1454,10 @@ function importCourseCSV(input) {
     updateParSum();
 
     if (errors.length > 0) {
-      statusEl.innerHTML = `â Loaded ${loaded} holes Â· â  ${errors.length} row(s) skipped`;
+      statusEl.innerHTML = `✓ Loaded ${loaded} holes · ⚠ ${errors.length} row(s) skipped`;
       statusEl.style.color = 'var(--gold)';
     } else {
-      statusEl.textContent = `â ${loaded} holes loaded from ${file.name}`;
+      statusEl.textContent = `✓ ${loaded} holes loaded from ${file.name}`;
       statusEl.style.color = 'var(--green-dark)';
     }
     input.value = ''; // allow re-import
@@ -1540,9 +1468,9 @@ function importCourseCSV(input) {
 function downloadTemplate() {
   const csv = [
     'Name,HandicapIndex,Email,Phone,Club,GUI_Number',
-    'SeÃ¡n Murphy,5.2,sean@example.com,+353851234567,Portmarnock GC,12345',
-    'CiarÃ¡n O\'Brien,11.8,ciaran@example.com,,Royal Dublin,',
-    'PÃ¡draig Kelly,-2.1,padraig@example.com,,Ballybunion GC,67890',
+    'Seán Murphy,5.2,sean@example.com,+353851234567,Portmarnock GC,12345',
+    'Ciarán O\'Brien,11.8,ciaran@example.com,,Royal Dublin,',
+    'Pádraig Kelly,-2.1,padraig@example.com,,Ballybunion GC,67890',
   ].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -1576,7 +1504,7 @@ function loadChosenCSV() {
 
   if (result.errors.length > 0 && result.players.length === 0) {
     resultEl.innerHTML = `<div class="alert" style="background:#fdf0f0;color:var(--red);border:1px solid #f5c6c6;">
-      â Import failed:<br>${result.errors.join('<br>')}
+      ❌ Import failed:<br>${result.errors.join('<br>')}
     </div>`;
     return;
   }
@@ -1595,9 +1523,9 @@ function loadChosenCSV() {
   document.getElementById('csvFileName').textContent = 'No file chosen';
   document.getElementById('csvLoadBtn').style.display = 'none';
 
-  let msg = `â Loaded <strong>${added}</strong> player${added !== 1 ? 's' : ''}`;
-  if (skipped > 0) msg += ` Â· <strong>${skipped}</strong> skipped (duplicates)`;
-  if (result.errors.length > 0) msg += `<br><span style="font-size:12px;opacity:0.8;">â  Rows with errors: ${result.errors.join('; ')}</span>`;
+  let msg = `✓ Loaded <strong>${added}</strong> player${added !== 1 ? 's' : ''}`;
+  if (skipped > 0) msg += ` · <strong>${skipped}</strong> skipped (duplicates)`;
+  if (result.errors.length > 0) msg += `<br><span style="font-size:12px;opacity:0.8;">⚠ Rows with errors: ${result.errors.join('; ')}</span>`;
   resultEl.innerHTML = `<div class="alert alert-success">${msg}</div>`;
 }
 
@@ -1668,39 +1596,9 @@ function parseCSVLine(line) {
   return cols;
 }
 
-// ââ SAVE TO CLOUD ââ
-async function saveToCloud() {
-  const btn = document.getElementById('cloudSaveBtn');
-  const status = document.getElementById('cloudSaveStatus');
-  if (!state.comp.name) {
-    showAlert('Please enter a competition name before saving.');
-    return;
-  }
-  btn.disabled = true;
-  btn.textContent = 'â Savingâ¦';
-  status.textContent = '';
-  try {
-    const id = await saveCompetition();
-    if (id) {
-      status.textContent = 'â Saved â ID: ' + id.slice(0, 8) + 'â¦';
-      status.style.color = 'var(--green-dark)';
-      btn.textContent = 'â Saved';
-    } else {
-      status.textContent = 'â Save failed â check console';
-      status.style.color = 'var(--red)';
-      btn.textContent = 'â Save to Cloud';
-    }
-  } catch(e) {
-    status.textContent = 'â Error: ' + e.message;
-    status.style.color = 'var(--red)';
-    btn.textContent = 'â Save to Cloud';
-  }
-  btn.disabled = false;
-}
-
-
+function copyShareText() {
   const text = document.getElementById('shareResults').textContent;
-  navigator.clipboard.writeText(text).then(() => showAlert('Copied to clipboard â ready to paste into WhatsApp!'));
+  navigator.clipboard.writeText(text).then(() => showAlert('Copied to clipboard — ready to paste into WhatsApp!'));
 }
 
 
