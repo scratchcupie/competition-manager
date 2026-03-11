@@ -524,6 +524,10 @@
     .nav-tabs { padding: 0 12px; }
     .comp-bar { padding: 12px 16px; gap: 16px; }
   }
+/* ── PIN BADGE ── */
+.pin-badge{font-family:'DM Mono',monospace;font-size:13px;font-weight:600;letter-spacing:0.15em;color:var(--ink);background:var(--mist);border:1px solid var(--stone);border-radius:3px;padding:3px 8px;display:inline-block;}
+.pin-regen{background:none;border:1px solid var(--stone);border-radius:2px;cursor:pointer;font-size:10px;padding:2px 6px;color:var(--grey);font-family:'DM Mono',monospace;letter-spacing:0.05em;transition:all 0.15s;}
+.pin-regen:hover{border-color:var(--green-dark);color:var(--green-dark);}
 </style>
 </head>
 <body>
@@ -700,7 +704,13 @@
         <input type="number" id="playerHcp" placeholder="e.g. 12.4 or -2.1" step="0.1" min="-10" max="54" onkeydown="if(event.key==='Enter')addPlayer()">
       </div>
     </div>
-    <button class="btn btn-primary" onclick="addPlayer()">+ Add Player</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px 14px;background:var(--mist);border:1px solid var(--stone);border-radius:3px;flex-wrap:wrap;">
+          <span style="font-family:'DM Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--grey);white-space:nowrap;">Player PIN</span>
+          <input type="text" id="playerPIN" maxlength="4" placeholder="e.g. 4821" style="border:1px solid var(--stone);border-radius:2px;padding:8px 12px;font-family:'DM Mono',monospace;font-size:16px;font-weight:600;letter-spacing:0.25em;color:var(--ink);width:100px;outline:none;text-align:center;" oninput="this.value=this.value.replace(/[^0-9]/g,'').substring(0,4)" onfocus="if(!this.value)this.value=generatePIN()">
+          <button class="btn btn-secondary btn-sm" type="button" onclick="document.getElementById('playerPIN').value=generatePIN()">🔄 New PIN</button>
+          <span style="font-size:12px;color:var(--grey);">4-digit PIN for player score entry · auto-generated if left blank</span>
+        </div>
+        <button class="btn btn-primary" onclick="addPlayer()">+ Add Player</button>
     <button class="btn btn-secondary" style="margin-left:8px;" onclick="addSamplePlayers()">Load 8 Demo Players</button>
   </div>
 
@@ -739,12 +749,13 @@
           <th>Name</th>
           <th>H. Index</th>
           <th>Playing Hcp</th>
+          <th>PIN</th>
           <th>Status</th>
           <th></th>
         </tr>
       </thead>
       <tbody id="playerTableBody">
-        <tr><td colspan="6" style="text-align:center;color:var(--grey);padding:20px;font-size:13px;">No players added yet</td></tr>
+        <tr><td colspan="7" style="text-align:center;color:var(--grey);padding:20px;font-size:13px;">No players added yet</td></tr>
       </tbody>
     </table>
   </div>
@@ -1027,7 +1038,10 @@ function addPlayer() {
   if (!name) { alert('Please enter a player name'); return; }
   if (isNaN(hcp) || hcp < -10 || hcp > 54) { alert('Please enter a valid handicap index (–10.0 to +54.0)'); return; }
   if (state.players.length >= 8) { alert('Maximum 8 players for demo'); return; }
-  state.players.push({ id: Date.now(), name, hcpIndex: hcp });
+  const pinInput = document.getElementById('playerPIN');
+  const pinVal = (pinInput && pinInput.value && pinInput.value.length === 4) ? pinInput.value : generatePIN();
+  state.players.push({ id: Date.now(), name, hcpIndex: hcp, pin: pinVal });
+  if (pinInput) pinInput.value = '';
   document.getElementById('playerName').value = '';
   document.getElementById('playerHcp').value = '';
   document.getElementById('playerName').focus();
@@ -1046,7 +1060,7 @@ function addSamplePlayers() {
     { name: 'Aoife Ryan', hcpIndex: -0.5 },      // plus handicap
     { name: 'Tomás Burke', hcpIndex: 28.3 },
   ];
-  samples.forEach((p, i) => state.players.push({ id: i + 1, ...p }));
+  samples.forEach((p, i) => state.players.push({ id: i + 1, pin: generatePIN(), ...p }));
   renderPlayerTable();
 }
 
@@ -1073,6 +1087,9 @@ function renderPlayerTable() {
       <td><strong>${p.name}</strong></td>
       <td><span class="mono" style="${isPlus ? 'color:var(--gold);font-weight:600;' : ''}">${formatHcpIndex(p.hcpIndex)}${isPlus ? ' <span style="font-size:9px;background:var(--gold-light);color:var(--gold);padding:1px 4px;border-radius:2px;font-family:DM Mono,monospace;letter-spacing:0.05em;">PLUS</span>' : ''}</span></td>
       <td><span class="mono" style="color:var(--green-dark);font-weight:600;">${formatPlayingHcp(playHcp)}</span></td>
+      <td>
+        <span class="pin-badge">${p.pin || '—'}</span>
+        <button class="pin-regen" onclick="event.stopPropagation();regeneratePIN(${p.id})" title="New PIN">↺</button>
       <td>
         <span class="status-dot ${hasScore ? 'dot-done' : 'dot-pending'}"></span>
         <span style="font-size:12px;color:var(--grey);">${hasScore ? 'Score entered' : 'Pending'}</span>
@@ -1105,7 +1122,7 @@ function buildScoringTab() {
     return `<button class="btn ${hasScore ? 'btn-primary' : 'btn-secondary'}"
       onclick="selectPlayer(${p.id})"
       id="psel-${p.id}">
-      ${hasScore ? '✓ ' : ''}${p.name}
+      ${hasScore ? '✓ ' : ''}${p.name}${p.pin ? '<br><span style="font-family:\'DM Mono\',monospace;font-size:10px;letter-spacing:0.15em;color:rgba(255,255,255,0.6);font-weight:400;">PIN: ' + p.pin + '</span>' : ''}
     </button>`;
   }).join('');
   if (state.activePlayer) selectPlayer(state.activePlayer);
@@ -1472,10 +1489,10 @@ function importCourseCSV(input) {
 
 function downloadTemplate() {
   const csv = [
-    'Name,HandicapIndex,Email,Phone,Club,GUI_Number',
-    'Seán Murphy,5.2,sean@example.com,+353851234567,Portmarnock GC,12345',
+    'Name,HandicapIndex,PIN,Email,Phone,Club,GUI_Number',
+    'Seán Murphy,5.2,1234,sean@example.com,+353851234567,Portmarnock GC,12345',
     'Ciarán O\'Brien,11.8,ciaran@example.com,,Royal Dublin,',
-    'Pádraig Kelly,-2.1,padraig@example.com,,Ballybunion GC,67890',
+    'Pádraig Kelly,-2.1,9012,padraig@example.com,,Ballybunion GC,67890',
   ].join('\n');
   const blob = new Blob([csv], { type: 'text/csv' });
   const url = URL.createObjectURL(blob);
@@ -1565,6 +1582,7 @@ function parsePlayerCSV(text) {
   const phoneIdx = headers.findIndex(h => h === 'phone');
   const clubIdx  = headers.findIndex(h => h === 'club');
   const guiIdx   = headers.findIndex(h => h === 'gui_number');
+  const pinIdx  = headers.findIndex(h => h === 'pin');
 
   for (let i = 1; i < lines.length; i++) {
     const line = lines[i].trim();
@@ -1583,6 +1601,12 @@ function parsePlayerCSV(text) {
     if (phoneIdx !== -1 && cols[phoneIdx]) player.phone = cols[phoneIdx].trim();
     if (clubIdx  !== -1 && cols[clubIdx])  player.club  = cols[clubIdx].trim();
     if (guiIdx   !== -1 && cols[guiIdx])   player.gui   = cols[guiIdx].trim();
+    // PIN: use CSV value if valid 4-digit, otherwise auto-generate
+    if (pinIdx !== -1 && cols[pinIdx] && /^[0-9]{4}$/.test(cols[pinIdx].trim())) {
+      player.pin = cols[pinIdx].trim();
+    } else {
+      player.pin = generatePIN();
+    }
     players.push(player);
   }
   return { players, errors };
@@ -1605,6 +1629,35 @@ function copyShareText() {
   const text = document.getElementById('shareResults').textContent;
   navigator.clipboard.writeText(text).then(() => showAlert('Copied to clipboard — ready to paste into WhatsApp!'));
 }
+
+  // ═══════════════════════════════════════════
+  // PIN GENERATION
+  // ═══════════════════════════════════════════
+
+  function generatePIN() {
+    // Generate a unique random 4-digit PIN (1000-9999)
+    const existing = new Set(state.players.map(p => p.pin).filter(Boolean));
+    let pin;
+    let attempts = 0;
+    do {
+      pin = String(Math.floor(1000 + Math.random() * 9000));
+      attempts++;
+    } while (existing.has(pin) && attempts < 100);
+    return pin;
+  }
+
+  function regeneratePIN(playerId) {
+    const p = state.players.find(pl => pl.id === playerId);
+    if (!p) return;
+    p.pin = generatePIN();
+    renderPlayerTable();
+    showAlert('New PIN for ' + p.name + ': ' + p.pin);
+  }
+
+  function refreshPINInput() {
+    const el = document.getElementById('playerPIN');
+    if (el) el.value = generatePIN();
+  }
 
 
 </script>
