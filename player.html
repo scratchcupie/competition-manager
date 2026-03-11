@@ -427,9 +427,9 @@ async function findCard() {
     // 5. Load existing scores
     var sResult = await db.from('scores').select('*')
       .eq('player_id', player.id).eq('competition_id', compId).limit(1);
-    if (sResult.data && sResult.data.length > 0 && sResult.data[0].hole_scores) {
+    if (sResult.data && sResult.data.length > 0 && sResult.data[0].scores) {
       try {
-        var saved = JSON.parse(sResult.data[0].hole_scores);
+        var saved = JSON.parse(sResult.data[0].scores);
         state.scores = Array(18).fill(0).map(function(_, i) { return saved[i] || 0; });
       } catch(e) { state.scores = Array(18).fill(0); }
     } else {
@@ -643,8 +643,8 @@ async function submitCard() {
     var payload = {
       player_id:      state.player.id,
       competition_id: state.comp.id,
-      hole_scores:    JSON.stringify(state.scores),
-      submitted_at:   new Date().toISOString()
+      scores:    JSON.stringify(state.scores),
+      updated_at:     new Date().toISOString()
     };
 
     var result = await db.from('scores')
