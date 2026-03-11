@@ -529,6 +529,12 @@
 .pin-regen{background:none;border:1px solid var(--stone);border-radius:2px;cursor:pointer;font-size:10px;padding:2px 6px;color:var(--grey);font-family:'DM Mono',monospace;letter-spacing:0.05em;transition:all 0.15s;}
 .pin-regen:hover{border-color:var(--green-dark);color:var(--green-dark);}
 </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = 'https://uxlndfyxiftepvtdbryn.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_X1XRELXJV0WJXoaXY6mlkw_iUKhO9WW';
+    const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  </script>
 </head>
 <body>
 
@@ -739,6 +745,7 @@
       <span class="card-title" style="border:none;padding:0;margin:0;">Player List</span>
       <div style="display:flex;align-items:center;gap:10px;">
         <span id="playerCount" style="color:var(--grey);font-family:'DM Mono',monospace;font-size:11px;font-weight:300;">0 players</span>
+        <span id="syncIndicator" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--green-dark);opacity:0;transition:opacity 0.4s;letter-spacing:0.05em;">Synced ✓</span>
         <button class="btn btn-sm btn-danger" id="clearAllBtn" style="display:none;" onclick="clearAllPlayers()">✕ Remove All</button>
       </div>
     </div>
@@ -760,6 +767,17 @@
     </table>
   </div>
 
+  <div class="card" style="border-color:var(--green-dark);background:linear-gradient(135deg,#f7fdf7 0%,#eaf2eb 100%);">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;">
+      <div>
+        <div class="card-title" style="color:var(--green-dark);border:none;padding:0;margin-bottom:4px;">Cloud Save</div>
+        <div style="font-size:13px;color:var(--grey);">Save this competition and all players to the cloud so you can share PINs and restore later.</div>
+      </div>
+      <button class="btn btn-primary" id="saveToCloudBtn" onclick="saveToCloud()" style="gap:8px;white-space:nowrap;">
+        Save to Cloud ☁️
+      </button>
+    </div>
+  </div>
   <div class="flex gap-2">
     <button class="btn btn-secondary" onclick="showTab('setup')">← Back</button>
     <button class="btn btn-primary" onclick="goToScoring()">Continue to Score Entry →</button>
@@ -903,7 +921,8 @@ const state = {
   si: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18], // Stroke Index per hole (default sequential)
   players: [],
   scores: {}, // playerId -> array of 18 gross scores
-  activePlayer: null
+  activePlayer: null,
+  savedCompId: null   // set after first cloud save
 };
 
 // ═══════════════════════════════════════════
@@ -1046,6 +1065,11 @@ function addPlayer() {
   document.getElementById('playerHcp').value = '';
   document.getElementById('playerName').focus();
   renderPlayerTable();
+  // Auto-sync newly added player if competition is saved
+  if (state.savedCompId) {
+    const newP = state.players[state.players.length - 1];
+    if (newP) syncPlayerToSupabase(newP);
+  }
 }
 
 function addSamplePlayers() {
@@ -1100,6 +1124,11 @@ function renderPlayerTable() {
 }
 
 function removePlayer(id) {
+  // Delete from cloud if saved
+  if (state.savedCompId) {
+    db.from('players').delete().eq('id', String(id)).eq('competition_id', state.savedCompId)
+      .then(() => showSyncIndicator());
+  }
   state.players = state.players.filter(p => p.id !== id);
   delete state.scores[id];
   renderPlayerTable();
@@ -1652,11 +1681,95 @@ function copyShareText() {
     p.pin = generatePIN();
     renderPlayerTable();
     showAlert('New PIN for ' + p.name + ': ' + p.pin);
+    if (state.savedCompId) syncPlayerToSupabase(p);
   }
 
   function refreshPINInput() {
     const el = document.getElementById('playerPIN');
     if (el) el.value = generatePIN();
+  }
+
+  // ═══════════════════════════════════════════
+  // SUPABASE CLOUD SYNC
+  // ═══════════════════════════════════════════
+
+  function showSyncIndicator() {
+    const el = document.getElementById('syncIndicator');
+    if (!el) return;
+    el.style.opacity = '1';
+    clearTimeout(el._fadeTimer);
+    el._fadeTimer = setTimeout(() => { el.style.opacity = '0'; }, 2500);
+  }
+
+  async function syncPlayerToSupabase(player) {
+    if (!state.savedCompId) return;
+    try {
+      const row = {
+        id: String(player.id),
+        competition_id: state.savedCompId,
+        name: player.name,
+        hcp_index: player.hcpIndex,
+        pin: player.pin || null,
+        locked: false
+      };
+      const { error } = await db.from('players').upsert(row, { onConflict: 'id' });
+      if (!error) showSyncIndicator();
+    } catch (e) {
+      console.warn('Supabase sync error:', e);
+    }
+  }
+
+  async function saveToCloud() {
+    const btn = document.getElementById('saveToCloudBtn');
+    if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+    try {
+      // 1. Upsert competition
+      const compRow = {
+        name:          state.comp.name  || 'Competition',
+        course:        state.comp.course || '',
+        date:          state.comp.date   || null,
+        format:        state.comp.format || 'stableford',
+        par:           state.comp.par,
+        course_rating: state.comp.courseRating,
+        slope_rating:  state.comp.slopeRating,
+        hcp_allowance: state.comp.hcpAllowance,
+        pars:          JSON.stringify(state.pars),
+        si:            JSON.stringify(state.si)
+      };
+      // If we already have a savedCompId, update that row; otherwise insert
+      let compId = state.savedCompId;
+      if (compId) {
+        const { error } = await db.from('competitions').update(compRow).eq('id', compId);
+        if (error) throw error;
+      } else {
+        const { data, error } = await db.from('competitions').insert(compRow).select('id').single();
+        if (error) throw error;
+        compId = data.id;
+        state.savedCompId = compId;
+      }
+
+      // 2. Upsert all players
+      if (state.players.length > 0) {
+        const playerRows = state.players.map(p => ({
+          id:             String(p.id),
+          competition_id: compId,
+          name:           p.name,
+          hcp_index:      p.hcpIndex,
+          pin:            p.pin || null,
+          locked:         false
+        }));
+        const { error: pErr } = await db.from('players').upsert(playerRows, { onConflict: 'id' });
+        if (pErr) throw pErr;
+      }
+
+      showAlert('Saved to cloud ✓');
+      showSyncIndicator();
+      if (btn) { btn.textContent = 'Saved ✓ ☁️'; btn.style.background = 'var(--green-mid)'; }
+    } catch (err) {
+      console.error('Cloud save failed:', err);
+      showAlert('Cloud save failed: ' + (err.message || err));
+      if (btn) { btn.disabled = false; btn.textContent = 'Save to Cloud ☁️'; }
+    }
   }
 
 
