@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Score Entry — Scratch Cups Ireland</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  :root {
+    --green: #175911;
+    --green-light: #1e7016;
+    --green-pale: #e8f5e3;
+    --gold: #C8952A;
+    --gold-pale: #fdf6e9;
+    --red: #c0392b;
+    --grey: #6b7280;
+    --grey-light: #f3f4f6;
+    --border: #e5e7eb;
+    --white: #ffffff;
+    --text: #111827;
+    --text-muted: #6b7280;
+    --radius: 12px;
+    --shadow: 0 1px 3px rgba(0,0,0,0.1);
+    --shadow-lg: 0 4px 20px rgba(0,0,0,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #f0f4ef;
+    color: var(--text);
+    min-height: 100vh;
+    padding-bottom: 40px;
+  }
+
+  .header {
+    background: var(--green);
+    color: white;
+    padding: 16px 20px 14px;
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .header-brand { font-family: 'Playfair Display', serif; font-size: 15px; opacity: 0.85; letter-spacing: 0.02em; }
+  .header-comp  { font-size: 17px; font-weight: 700; margin-top: 2px; }
+  .header-meta  { font-size: 12px; opacity: 0.75; margin-top: 3px; font-family: 'DM Mono', monospace; }
+
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ── PIN Screen ── */
+  .pin-wrap { max-width: 420px; margin: 0 auto; padding: 32px 20px; }
+  .pin-card { background: white; border-radius: var(--radius); padding: 32px 24px; box-shadow: var(--shadow-lg); text-align: center; }
+  .pin-icon  { font-size: 48px; margin-bottom: 16px; }
+  .pin-title { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--green); margin-bottom: 8px; }
+  .pin-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 28px; line-height: 1.5; }
+  .pin-input-wrap { margin-bottom: 20px; }
+  .pin-input {
+    width: 100%; font-size: 32px; font-family: 'DM Mono', monospace; font-weight: 500;
+    text-align: center; letter-spacing: 0.3em; border: 2px solid var(--border);
+    border-radius: 10px; padding: 16px 12px; outline: none; color: var(--green);
+    transition: border-color 0.2s; -webkit-appearance: none;
+  }
+  .pin-input:focus { border-color: var(--green); }
+  .pin-input.error { border-color: var(--red); animation: shake 0.3s; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+  .pin-error { color: var(--red); font-size: 13px; margin-top: 8px; min-height: 18px; }
+
+  .btn-primary {
+    display: block; width: 100%; background: var(--green); color: white; border: none;
+    border-radius: 10px; padding: 16px; font-family: 'DM Sans', sans-serif; font-size: 16px;
+    font-weight: 600; cursor: pointer; transition: background 0.15s, transform 0.1s; -webkit-appearance: none;
+  }
+  .btn-primary:active { background: var(--green-light); transform: scale(0.98); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+  /* ── Player Bar ── */
+  .player-bar {
+    background: white; border-bottom: 1px solid var(--border); padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .player-name  { font-size: 18px; font-weight: 700; color: var(--green); }
+  .player-hcp   { font-size: 13px; color: var(--text-muted); }
+  .playing-hcp-badge {
+    background: var(--green-pale); color: var(--green); font-size: 12px; font-weight: 600;
+    padding: 4px 10px; border-radius: 20px; font-family: 'DM Mono', monospace;
+  }
+
+  /* ── Totals Strip ── */
+  .totals-strip {
+    background: var(--green); color: white; display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr; text-align: center; padding: 10px 0;
+  }
+  .t-label { font-size: 10px; opacity: 0.75; text-transform: uppercase; letter-spacing: 0.05em; }
+  .t-val { font-family: 'DM Mono', monospace; font-size: 18px; font-weight: 600; margin-top: 2px; }
+  .t-val.highlight { color: var(--gold); }
+
+  /* ── Scorecard ── */
+  .scorecard-wrap { padding: 0 0 20px; }
+  .nine-sep {
+    background: var(--grey-light); padding: 10px 16px; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.08em; color: var(--grey);
+    border-top: 2px solid var(--border); border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+  }
+  .nine-subtotal { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--text); }
+
+  table.scorecard { width: 100%; border-collapse: collapse; background: white; }
+  table.scorecard th {
+    background: var(--grey-light); font-size: 11px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.05em; color: var(--grey);
+    padding: 8px 6px; text-align: center; border-bottom: 1px solid var(--border);
+  }
+  table.scorecard td { text-align: center; border-bottom: 1px solid var(--border); padding: 0; height: 52px; }
+  td.hole-num  { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 600; color: var(--text-muted); width: 36px; }
+  td.par-cell  { font-family: 'DM Mono', monospace; font-size: 14px; width: 36px; }
+  td.si-cell   { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--gold); font-weight: 600; width: 30px; }
+  td.shots-cell{ font-size: 11px; color: var(--green); font-weight: 700; width: 28px; }
+  td.score-cell{ width: 64px; padding: 4px 6px; }
+  td.pts-cell  { font-family: 'DM Mono', monospace; font-size: 15px; font-weight: 600; width: 44px; }
+  .pts-eagle  { color: #8B0000; }
+  .pts-birdie { color: #c0392b; }
+  .pts-par    { color: var(--green); }
+  .pts-bogey  { color: var(--text-muted); }
+  .pts-double { color: #aaa; }
+  .pts-zero   { color: #ccc; }
+
+  .score-input {
+    width: 100%; height: 44px; border: 2px solid var(--border); border-radius: 8px;
+    font-size: 20px; font-family: 'DM Mono', monospace; font-weight: 600; text-align: center;
+    color: var(--text); outline: none; -webkit-appearance: none; background: white;
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .score-input:focus  { border-color: var(--green); background: var(--green-pale); }
+  .score-input.entered{ border-color: var(--green); background: var(--green-pale); color: var(--green); }
+
+  /* ── Submit Section ── */
+  .submit-section { padding: 20px; max-width: 480px; margin: 0 auto; }
+  .submit-progress { background: white; border-radius: var(--radius); padding: 16px; margin-bottom: 16px; box-shadow: var(--shadow); text-align: center; }
+  .progress-bar-wrap { background: var(--grey-light); border-radius: 100px; height: 8px; margin: 10px 0 8px; overflow: hidden; }
+  .progress-bar { height: 100%; background: var(--green); border-radius: 100px; transition: width 0.3s; }
+  .progress-label { font-size: 13px; color: var(--text-muted); }
+  .progress-count { font-family: 'DM Mono', monospace; font-weight: 600; color: var(--green); }
+
+  .btn-submit {
+    display: block; width: 100%; background: var(--green); color: white; border: none;
+    border-radius: 12px; padding: 18px; font-family: 'DM Sans', sans-serif; font-size: 17px;
+    font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(23,89,17,0.3); -webkit-appearance: none;
+  }
+  .btn-submit:active  { transform: scale(0.98); box-shadow: 0 2px 8px rgba(23,89,17,0.2); }
+  .btn-submit:disabled{ opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-submit.partial { background: #888; box-shadow: none; }
+
+  /* ── Confirmation Screen ── */
+  .confirm-wrap { max-width: 480px; margin: 0 auto; padding: 24px 20px; }
+  .confirm-card { background: white; border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; }
+  .confirm-hero { background: var(--green); color: white; text-align: center; padding: 32px 24px; }
+  .confirm-tick { font-size: 52px; margin-bottom: 12px; animation: popIn 0.4s cubic-bezier(0.175,0.885,0.32,1.275); }
+  @keyframes popIn { 0%{transform:scale(0);opacity:0} 100%{transform:scale(1);opacity:1} }
+  .confirm-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 6px; }
+  .confirm-sub   { font-size: 14px; opacity: 0.8; }
+  .confirm-stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; text-align: center;
+    padding: 20px 0; border-bottom: 1px solid var(--border);
+  }
+  .stat-val   { font-family: 'DM Mono', monospace; font-size: 24px; font-weight: 600; color: var(--green); }
+  .stat-val.gold { color: var(--gold); }
+  .stat-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); margin-top: 4px; }
+  .confirm-summary { padding: 16px 20px; }
+  .confirm-hole-grid { display: grid; grid-template-columns: repeat(9, 1fr); gap: 3px; margin-top: 8px; }
+  .confirm-hole .ch-num   { font-size: 9px; color: var(--text-muted); font-family: 'DM Mono', monospace; text-align: center; }
+  .confirm-hole .ch-score { font-size: 13px; font-weight: 600; font-family: 'DM Mono', monospace; padding: 2px 0; text-align: center; }
+  .confirm-hole .ch-pts   { font-size: 10px; color: var(--text-muted); font-family: 'DM Mono', monospace; text-align: center; }
+  .confirm-actions { padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); }
+  .btn-secondary {
+    display: block; width: 100%; background: white; color: var(--green); border: 2px solid var(--green);
+    border-radius: 10px; padding: 14px; font-family: 'DM Sans', sans-serif; font-size: 15px;
+    font-weight: 600; cursor: pointer; text-align: center; transition: background 0.15s; -webkit-appearance: none;
+  }
+  .btn-secondary:active { background: var(--green-pale); }
+  .locked-banner {
+    background: #fff3cd; border: 1px solid var(--gold); border-radius: 8px;
+    padding: 12px 16px; text-align: center; font-size: 14px; color: #856404; margin: 4px 0 0;
+  }
+
+  /* ── Loading ── */
+  .loading-wrap { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+  .spinner {
+    width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--green);
+    border-radius: 50%; animation: spin 0.7s linear infinite; margin: 0 auto 16px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── Toast ── */
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
+    background: #1a1a1a; color: white; padding: 12px 20px; border-radius: 100px;
+    font-size: 14px; font-weight: 500; z-index: 999; transition: transform 0.3s cubic-bezier(0.175,0.885,0.32,1.275);
+    white-space: nowrap; box-shadow: var(--shadow-lg);
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="header" id="mainHeader">
+  <div class="header-brand">⛳ Scratch Cups Ireland</div>
+  <div class="header-comp" id="headerComp">Score Entry</div>
+  <div class="header-meta" id="headerMeta"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<!-- SCREEN 1: PIN Entry -->
+<div class="screen active" id="screenPin">
+  <div class="pin-wrap">
+    <div class="pin-card">
+      <div class="pin-icon">🏌️</div>
+      <div class="pin-title">Enter Your PIN</div>
+      <div class="pin-subtitle">Your secretary will have shared a PIN with you. Enter it below to access your scorecard.</div>
+      <div class="pin-input-wrap">
+        <input type="tel" inputmode="numeric" pattern="[0-9]*" maxlength="6"
+               id="pinInput" class="pin-input" placeholder="0000"
+               autocomplete="off" autocorrect="off" spellcheck="false">
+        <div class="pin-error" id="pinError"></div>
+      </div>
+      <button class="btn-primary" id="pinBtn" onclick="findCard()">Find My Scorecard →</button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: Score Entry -->
+<div class="screen" id="screenScore">
+  <div class="player-bar">
+    <div>
+      <div class="player-name" id="playerName">—</div>
+      <div class="player-hcp" id="playerHcp"></div>
+    </div>
+    <div class="playing-hcp-badge" id="playingHcpBadge"></div>
+  </div>
+  <div class="totals-strip">
+    <div><div class="t-label">F9</div><div class="t-val" id="totF9">—</div></div>
+    <div><div class="t-label">B9</div><div class="t-val" id="totB9">—</div></div>
+    <div><div class="t-label">Gross</div><div class="t-val" id="totGross">—</div></div>
+    <div><div class="t-label">Points</div><div class="t-val highlight" id="totPts">—</div></div>
+  </div>
+  <div class="scorecard-wrap">
+    <div class="nine-sep">
+      <span>Front Nine — Holes 1–9</span>
+      <span class="nine-subtotal" id="f9sub"></span>
+    </div>
+    <table class="scorecard"><thead><tr>
+      <th>Hole</th><th>Par</th><th>SI</th><th>Sh</th><th>Score</th><th>Pts</th>
+    </tr></thead><tbody id="tbodyF9"></tbody></table>
+    <div class="nine-sep">
+      <span>Back Nine — Holes 10–18</span>
+      <span class="nine-subtotal" id="b9sub"></span>
+    </div>
+    <table class="scorecard"><thead><tr>
+      <th>Hole</th><th>Par</th><th>SI</th><th>Sh</th><th>Score</th><th>Pts</th>
+    </tr></thead><tbody id="tbodyB9"></tbody></table>
+  </div>
+  <div class="submit-section">
+    <div class="submit-progress">
+      <div class="progress-label">
+        <span class="progress-count" id="holesDone">0</span> of 18 holes entered
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar" style="width:0%"></div></div>
+    </div>
+    <button class="btn-submit" id="submitBtn" onclick="submitCard()" disabled>Submit Scorecard ✓</button>
+    <p style="text-align:center;font-size:12px;color:var(--text-muted);margin-top:10px;">
+      You can edit and resubmit until the secretary locks your card.
+    </p>
+  </div>
+</div>
+
+<!-- SCREEN 3: Confirmation -->
+<div class="screen" id="screenConfirm">
+  <div class="confirm-wrap">
+    <div class="confirm-card">
+      <div class="confirm-hero">
+        <div class="confirm-tick">✅</div>
+        <div class="confirm-title">Card Submitted!</div>
+        <div class="confirm-sub" id="confirmSub">Your scores have been saved.</div>
+      </div>
+      <div class="confirm-stats">
+        <div><div class="stat-val" id="cfGross">—</div><div class="stat-label">Gross</div></div>
+        <div><div class="stat-val" id="cfNett">—</div><div class="stat-label">Nett</div></div>
+        <div><div class="stat-val gold" id="cfPts">—</div><div class="stat-label">Points</div></div>
+      </div>
+      <div class="confirm-summary">
+        <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-muted);margin-bottom:8px;">Hole-by-hole</div>
+        <div class="confirm-hole-grid" id="confirmGrid"></div>
+      </div>
+      <div class="confirm-actions">
+        <button class="btn-secondary" id="editBtn" onclick="editCard()">✏️ Edit My Scores</button>
+        <div class="locked-banner" id="lockedBanner" style="display:none">
+          🔒 Your scorecard has been locked by the secretary.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN: Loading -->
+<div class="screen" id="screenLoading">
+  <div class="loading-wrap">
+    <div class="spinner"></div>
+    <div id="loadingMsg">Loading...</div>
+  </div>
+</div>
+
+<script>
+const SUPABASE_URL = 'https://uxlndfyxiftepvtdbryn.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_X1XRELXJV0WJXoaXY6mlkw_iUKhO9WW';
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+let state = {
+  pin: null,
+  player: null,
+  comp: null,
+  pars: [],
+  si: [],
+  scores: Array(18).fill(0),
+  playingHcp: 0,
+  shotMap: []
+};
+
+// ─── Utilities ────────────────────────────────────────
+
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function showToast(msg, duration) {
+  duration = duration || 2500;
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, duration);
+}
+
+function setHeader(comp, course, date) {
+  document.getElementById('headerComp').textContent = comp || 'Score Entry';
+  var parts = [];
+  if (course) parts.push(course);
+  if (date)   parts.push(date);
+  document.getElementById('headerMeta').textContent = parts.join(' · ');
+}
+
+// ─── Auto-fill PIN from URL ───────────────────────────
+
+window.addEventListener('DOMContentLoaded', function() {
+  var params = new URLSearchParams(window.location.search);
+  var urlPin = params.get('pin');
+  if (urlPin) {
+    document.getElementById('pinInput').value = urlPin;
+    findCard();
+  }
+});
+
+document.getElementById('pinInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') findCard();
+});
+
+// ─── PIN Lookup ───────────────────────────────────────
+
+async function findCard() {
+  var pin = document.getElementById('pinInput').value.trim();
+  var errEl  = document.getElementById('pinError');
+  var input  = document.getElementById('pinInput');
+  var btn    = document.getElementById('pinBtn');
+
+  errEl.textContent = '';
+  input.classList.remove('error');
+
+  if (!pin || pin.length < 4) {
+    errEl.textContent = 'Please enter your 4-digit PIN.';
+    input.classList.add('error');
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Looking up...';
+  showScreen('screenLoading');
+  document.getElementById('loadingMsg').textContent = 'Finding your scorecard...';
+
+  try {
+    // 1. Find player by PIN
+    var pResult = await db.from('players').select('*').eq('pin', pin).limit(1);
+    if (pResult.error || !pResult.data || pResult.data.length === 0) {
+      throw { userMsg: 'PIN not found. Please check with your secretary.' };
+    }
+    var player = pResult.data[0];
+    state.player = player;
+    state.pin = pin;
+
+    // 2. Load competition
+    var compId = player.competition_id;
+    if (!compId) throw { userMsg: 'No competition linked to this PIN.' };
+
+    var cResult = await db.from('competitions').select('*').eq('id', compId).limit(1);
+    if (cResult.error || !cResult.data || cResult.data.length === 0) {
+      throw { userMsg: 'Competition not found.' };
+    }
+    var comp = cResult.data[0];
+    state.comp = comp;
+
+    // 3. Parse pars + SI
+    try { state.pars = JSON.parse(comp.pars); } catch(e) { state.pars = Array(18).fill(4); }
+    try { state.si   = JSON.parse(comp.si);   } catch(e) { state.si   = Array(18).fill(0).map(function(_,i){return i+1;}); }
+
+    // 4. Playing handicap
+    var hcpIndex  = parseFloat(player.hcp_index)    || 0;
+    var allowance = parseFloat(comp.hcp_allowance)  || 100;
+    state.playingHcp = Math.round(hcpIndex * (allowance / 100));
+    buildShotMap();
+
+    // 5. Load existing scores
+    var sResult = await db.from('scores').select('*')
+      .eq('player_id', player.id).eq('competition_id', compId).limit(1);
+    if (sResult.data && sResult.data.length > 0 && sResult.data[0].hole_scores) {
+      try {
+        var saved = JSON.parse(sResult.data[0].hole_scores);
+        state.scores = Array(18).fill(0).map(function(_, i) { return saved[i] || 0; });
+      } catch(e) { state.scores = Array(18).fill(0); }
+    } else {
+      state.scores = Array(18).fill(0);
+    }
+
+    // 6. Update header
+    setHeader(comp.name, comp.course, comp.date);
+
+    // 7. If locked, show confirmation directly
+    if (player.locked) {
+      renderConfirmation();
+      showScreen('screenConfirm');
+      return;
+    }
+
+    // 8. Show scorecard
+    buildScorecard();
+    showScreen('screenScore');
+
+  } catch (err) {
+    console.error(err);
+    showScreen('screenPin');
+    btn.disabled = false;
+    btn.textContent = 'Find My Scorecard →';
+    document.getElementById('pinError').textContent =
+      (err && err.userMsg) ? err.userMsg : 'Something went wrong. Please try again.';
+    document.getElementById('pinInput').classList.add('error');
+  }
+}
+
+// ─── Shot Map ─────────────────────────────────────────
+
+function buildShotMap() {
+  var hcp = state.playingHcp;
+  state.shotMap = Array(18).fill(0);
+  if (hcp === 0) return;
+
+  var sortedBySI = state.si.map(function(si, idx) { return { si: si, idx: idx }; })
+    .sort(function(a, b) { return a.si - b.si; });
+
+  if (hcp > 0) {
+    var shots = Math.min(hcp, 18);
+    for (var i = 0; i < shots; i++) state.shotMap[sortedBySI[i].idx] = 1;
+    if (hcp > 18) {
+      var extra = Math.min(hcp - 18, 18);
+      for (var j = 0; j < extra; j++) state.shotMap[sortedBySI[j].idx] = 2;
+    }
+  } else {
+    var abs = Math.min(Math.abs(hcp), 18);
+    for (var k = 0; k < abs; k++) state.shotMap[sortedBySI[17 - k].idx] = -1;
+  }
+}
+
+function getShotsDisplay(holeIdx) {
+  var s = state.shotMap[holeIdx];
+  if (s === 1)  return '●';
+  if (s === 2)  return '●●';
+  if (s === -1) return '◦';
+  return '';
+}
+
+// ─── Stableford ───────────────────────────────────────
+
+function calcPoints(grossScore, par, holeIdx) {
+  if (!grossScore || grossScore <= 0) return null;
+  var nett = grossScore - state.shotMap[holeIdx];
+  return Math.max(0, (par - nett) + 2);
+}
+
+function ptsClass(pts, par, gross, holeIdx) {
+  if (pts === null || gross <= 0) return 'pts-zero';
+  var nett = gross - state.shotMap[holeIdx];
+  var diff = nett - par;
+  if (diff <= -2) return 'pts-eagle';
+  if (diff === -1) return 'pts-birdie';
+  if (diff === 0)  return 'pts-par';
+  if (diff === 1)  return 'pts-bogey';
+  if (diff === 2)  return 'pts-double';
+  return 'pts-zero';
+}
+
+// ─── Scorecard Builder ────────────────────────────────
+
+function buildScorecard() {
+  buildNine('tbodyF9', 0, 9);
+  buildNine('tbodyB9', 9, 18);
+  updateTotals();
+  updateProgress();
+
+  var hcpIndex = parseFloat(state.player.hcp_index) || 0;
+  document.getElementById('playerName').textContent = state.player.name || '—';
+  document.getElementById('playerHcp').textContent  =
+    'HCI: ' + (hcpIndex < 0 ? '+' + Math.abs(hcpIndex) : hcpIndex);
+  document.getElementById('playingHcpBadge').textContent =
+    'Playing off ' + (state.playingHcp < 0 ? '+' + Math.abs(state.playingHcp) : state.playingHcp);
+}
+
+function buildNine(tbodyId, start, end) {
+  var tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+
+  for (var i = start; i < end; i++) {
+    var par   = state.pars[i] || 4;
+    var si    = state.si[i]   || (i + 1);
+    var score = state.scores[i] || 0;
+    var pts   = calcPoints(score, par, i);
+
+    var tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td class="hole-num">' + (i + 1) + '</td>' +
+      '<td class="par-cell">' + par + '</td>' +
+      '<td class="si-cell">'  + si  + '</td>' +
+      '<td class="shots-cell">' + getShotsDisplay(i) + '</td>' +
+      '<td class="score-cell"><input type="tel" inputmode="numeric" pattern="[0-9]*" ' +
+        'class="score-input' + (score > 0 ? ' entered' : '') + '" ' +
+        'value="' + (score > 0 ? score : '') + '" ' +
+        'placeholder="' + par + '" data-hole="' + i + '"></td>' +
+      '<td class="pts-cell ' + (pts !== null && score > 0 ? ptsClass(pts, par, score, i) : 'pts-zero') +
+        '" id="pts-' + i + '">' + (pts !== null && score > 0 ? pts : '—') + '</td>';
+    tbody.appendChild(tr);
+  }
+
+  // Attach listeners
+  var inputs = tbody.querySelectorAll('.score-input');
+  inputs.forEach(function(input) {
+    input.addEventListener('input', onScoreInput);
+    input.addEventListener('focus', function(e) { e.target.select(); });
+  });
+}
+
+function onScoreInput(e) {
+  var input   = e.target;
+  var holeIdx = parseInt(input.getAttribute('data-hole'));
+  var val     = parseInt(input.value);
+  var score   = (isNaN(val) || val <= 0) ? 0 : val;
+
+  state.scores[holeIdx] = score;
+  input.classList.toggle('entered', score > 0);
+
+  var par  = state.pars[holeIdx] || 4;
+  var pts  = calcPoints(score, par, holeIdx);
+  var ptsEl = document.getElementById('pts-' + holeIdx);
+  if (ptsEl) {
+    if (pts !== null && score > 0) {
+      ptsEl.textContent = pts;
+      ptsEl.className = 'pts-cell ' + ptsClass(pts, par, score, holeIdx);
+    } else {
+      ptsEl.textContent = '—';
+      ptsEl.className = 'pts-cell pts-zero';
+    }
+  }
+
+  updateTotals();
+  updateProgress();
+}
+
+function updateTotals() {
+  var f9Gross = 0, b9Gross = 0, totalPts = 0;
+  var f9Has = false, b9Has = false;
+
+  for (var i = 0; i < 9; i++) {
+    if (state.scores[i] > 0) { f9Gross += state.scores[i]; f9Has = true; }
+    var pts = calcPoints(state.scores[i], state.pars[i] || 4, i);
+    if (pts !== null) totalPts += pts;
+  }
+  for (var j = 9; j < 18; j++) {
+    if (state.scores[j] > 0) { b9Gross += state.scores[j]; b9Has = true; }
+    var pts2 = calcPoints(state.scores[j], state.pars[j] || 4, j);
+    if (pts2 !== null) totalPts += pts2;
+  }
+
+  var totalGross = f9Gross + b9Gross;
+  document.getElementById('totF9').textContent    = f9Has ? f9Gross : '—';
+  document.getElementById('totB9').textContent    = b9Has ? b9Gross : '—';
+  document.getElementById('totGross').textContent = (f9Has || b9Has) ? totalGross : '—';
+  document.getElementById('totPts').textContent   = (f9Has || b9Has) ? totalPts : '—';
+  document.getElementById('f9sub').textContent    = f9Has ? 'Gross: ' + f9Gross : '';
+  document.getElementById('b9sub').textContent    = b9Has ? 'Gross: ' + b9Gross : '';
+}
+
+function updateProgress() {
+  var entered = state.scores.filter(function(s) { return s > 0; }).length;
+  document.getElementById('holesDone').textContent = entered;
+  document.getElementById('progressBar').style.width = (entered / 18 * 100) + '%';
+
+  var btn = document.getElementById('submitBtn');
+  if (entered === 18) {
+    btn.disabled = false;
+    btn.classList.remove('partial');
+    btn.textContent = 'Submit Scorecard ✓';
+  } else if (entered > 0) {
+    btn.disabled = false;
+    btn.classList.add('partial');
+    btn.textContent = 'Submit Partial Card (' + entered + '/18)';
+  } else {
+    btn.disabled = true;
+    btn.classList.remove('partial');
+    btn.textContent = 'Submit Scorecard ✓';
+  }
+}
+
+// ─── Submit ───────────────────────────────────────────
+
+async function submitCard() {
+  var btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Saving...';
+
+  try {
+    var payload = {
+      player_id:      state.player.id,
+      competition_id: state.comp.id,
+      hole_scores:    JSON.stringify(state.scores),
+      submitted_at:   new Date().toISOString()
+    };
+
+    var result = await db.from('scores')
+      .upsert(payload, { onConflict: 'player_id,competition_id' });
+
+    if (result.error) throw result.error;
+
+    showToast('✅ Scorecard saved!');
+    renderConfirmation();
+    showScreen('screenConfirm');
+
+  } catch (err) {
+    console.error(err);
+    showToast('❌ Save failed — please try again');
+    btn.disabled = false;
+    updateProgress(); // restore correct button label
+  }
+}
+
+// ─── Confirmation ─────────────────────────────────────
+
+function renderConfirmation() {
+  var scores = state.scores;
+  var pars   = state.pars;
+
+  document.getElementById('confirmSub').textContent =
+    (state.player.name || '') + (state.comp.name ? ' — ' + state.comp.name : '');
+
+  var gross = 0, pts = 0;
+  for (var i = 0; i < 18; i++) {
+    if (scores[i] > 0) gross += scores[i];
+    var p = calcPoints(scores[i], pars[i] || 4, i);
+    if (p !== null) pts += p;
+  }
+  var nett = gross > 0 ? gross - state.playingHcp : 0;
+
+  document.getElementById('cfGross').textContent = gross || '—';
+  document.getElementById('cfNett').textContent  = nett  || '—';
+  document.getElementById('cfPts').textContent   = pts   || '—';
+
+  var grid = document.getElementById('confirmGrid');
+  grid.innerHTML = '';
+  for (var j = 0; j < 18; j++) {
+    var s  = scores[j];
+    var p2 = calcPoints(s, pars[j] || 4, j);
+    var div = document.createElement('div');
+    div.className = 'confirm-hole';
+    div.innerHTML =
+      '<div class="ch-num">'  + (j + 1) + '</div>' +
+      '<div class="ch-score">' + (s > 0 ? s : '—') + '</div>' +
+      '<div class="ch-pts">'   + (p2 !== null && s > 0 ? p2 + 'pt' : '') + '</div>';
+    grid.appendChild(div);
+  }
+
+  var isLocked = state.player.locked;
+  document.getElementById('editBtn').style.display      = isLocked ? 'none'  : 'block';
+  document.getElementById('lockedBanner').style.display = isLocked ? 'block' : 'none';
+}
+
+function editCard() {
+  buildScorecard();
+  showScreen('screenScore');
+}
+</script>
+</body>
+</html>
