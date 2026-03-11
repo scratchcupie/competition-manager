@@ -589,7 +589,7 @@
   <button class="nav-tab active" onclick="showTab('setup')">① Setup</button>
   <button class="nav-tab" onclick="showTab('players')">② Players</button>
   <button class="nav-tab" onclick="showTab('scoring')">③ Score Entry</button>
-  <button class="nav-tab" onclick="showTab('leaderboard')">④ Leaderboard</button>
+  <button class="nav-tab" onclick="showTab('leaderboard')">④ Leaderboard <span id="lbLiveIndicator" style="font-family:'DM Mono',monospace;font-size:9px;font-weight:400;letter-spacing:0.05em;color:var(--grey);display:none;"></span></button>
 </div>
 
 <!-- ════════════════════════════════════════
@@ -991,7 +991,7 @@ function showTab(tab) {
   });
   document.getElementById(`tab-${tab}`).classList.remove('hidden');
   if (tab === 'scoring') buildScoringTab();
-  if (tab === 'leaderboard') buildLeaderboard();
+  if (tab === 'leaderboard') { buildLeaderboard(); loadScoresFromSupabase(); }
 }
 
 // ═══════════════════════════════════════════
@@ -1718,6 +1718,55 @@ function copyShareText() {
       console.warn('Supabase sync error:', e);
     }
   }
+
+  // ═══════════════════════════════════════════
+  // LIVE SCORE SYNC FROM SUPABASE
+  // ═══════════════════════════════════════════
+
+  async function loadScoresFromSupabase() {
+    if (!state.savedCompId) return;
+    try {
+      const { data, error } = await db
+        .from('scores')
+        .select('*')
+        .eq('competition_id', state.savedCompId);
+
+      if (error) throw error;
+      if (!data || data.length === 0) return;
+
+      data.forEach(row => {
+        try {
+          const parsed = JSON.parse(row.scores);
+          if (Array.isArray(parsed)) {
+            state.scores[String(row.player_id)] = parsed;
+          }
+        } catch (e) {
+          console.warn('Could not parse scores for player', row.player_id, e);
+        }
+      });
+
+      buildLeaderboard();
+
+      // Update "Updated HH:MM:SS" timestamp on leaderboard card
+      const ts = new Date().toLocaleTimeString('en-IE', {
+        hour: '2-digit', minute: '2-digit', second: '2-digit'
+      });
+      const tsEl = document.getElementById('lbTimestamp');
+      if (tsEl) tsEl.textContent = 'Updated ' + ts;
+
+      // Update live indicator on nav tab
+      const liveEl = document.getElementById('lbLiveIndicator');
+      if (liveEl) {
+        liveEl.textContent = String.fromCharCode(8635) + ' ' + ts;
+        liveEl.style.display = 'inline';
+      }
+    } catch (err) {
+      console.warn('loadScoresFromSupabase error:', err);
+    }
+  }
+
+  // Auto-refresh leaderboard every 30 seconds
+  setInterval(loadScoresFromSupabase, 30000);
 
   async function saveToCloud() {
     const btn = document.getElementById('saveToCloudBtn');
